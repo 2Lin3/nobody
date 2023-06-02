@@ -26,28 +26,24 @@ namespace Nobody
 		groundBody->CreateFixture(&groundFixtureDef);
 		groundFixtureDef.density = 1.0f;
 		groundFixtureDef.friction = 0.5f;
+
 		//×ó²à
-		b2BodyDef bodyDef;
-		bodyDef.position.Set(0, 40);
-		b2Body* leftBody = world->CreateBody(&bodyDef);
 		b2PolygonShape groundShapeleft;
-		groundShapeleft.SetAsBox(5, 40);
+		groundShapeleft.SetAsBox(5, 40, b2Vec2(-64, -40), 0);
 		b2FixtureDef leftgroundFixtureDef;
 		leftgroundFixtureDef.shape = &groundShapeleft;
-		leftBody->CreateFixture(&leftgroundFixtureDef);
+		groundBody->CreateFixture(&leftgroundFixtureDef);
 		leftgroundFixtureDef.density = 1.0f;
 		leftgroundFixtureDef.friction = 0.5f;
 
 		//ÓÒ²à
-		b2BodyDef rbodyDef;
-		rbodyDef.position.Set(128, 40);
-		b2Body* rightBody = world->CreateBody(&rbodyDef);
 		b2PolygonShape groundShaperight;
-		groundShaperight.SetAsBox(5, 40);
+		groundShaperight.SetAsBox(5, 40, b2Vec2(64, -40), 0);
 		b2FixtureDef rightgroundFixtureDef;
 		rightgroundFixtureDef.shape = &groundShaperight;
-		rightBody->CreateFixture(&rightgroundFixtureDef);
+		groundBody->CreateFixture(&rightgroundFixtureDef);
 		rightgroundFixtureDef.density = 1.0f;
 		rightgroundFixtureDef.friction = 0.5f;
+		SetLife(100000);
 	}
 }

@@ -15,6 +15,8 @@ namespace Nobody
 		void SetBoostValue(float newmBoost);
 	private:
 		float mBoost = 0.0;
+		float mCircleRadius;
+
 	};
 }
 

@@ -15,17 +15,20 @@ namespace Nobody
 	{
 		SpriteComponent* sprite = new SpriteComponent(this, 100);
 		sprite->SetTexture(GetGame()->GetTexture("player"));
-		SetPosition(Vector2(200, 200));
+		SetPosition(Vector2(640, 600));
 		InputComponent* inputComponent = new InputComponent(this);
 		RigidComponent* rigidComponent = new RigidComponent(this,b2_dynamicBody);
 		rigidComponent->SetMass(3);
 		b2CircleShape circle;
-		circle.m_radius = 2.0f; // ÉèÖÃÔ²µÄ°ë¾¶
+		mCircleRadius = 2.0f;
+		circle.m_radius = mCircleRadius; // ÉèÖÃÔ²µÄ°ë¾¶
 		rigidComponent->SetShape(&circle);
 		b2Body* mplayer = rigidComponent->GetmBody();
 		mplayer->SetLinearDamping(0.8);
 		mplayer->SetAngularDamping(0.5);
-
+		float scaleFactorX = (2 * mCircleRadius * 10) / sprite->GetTexWidth();
+		float scaleFactorY = (2 * mCircleRadius * 10) / sprite->GetTexHeight();
+		SetScale(Vector2(scaleFactorX, scaleFactorY));
 		SetLife(100);
 		//MoveComponent* moveComponent = new MoveComponent(this);
 		//moveComponent->SetDir(Vector2(mplayer->GetLinearVelocity().x, mplayer->GetLinearVelocity().y));
@@ -36,4 +39,5 @@ namespace Nobody
 	void Player::SetBoostValue(float newmBoost) {
 		mBoost = newmBoost;
 	}
+
 }

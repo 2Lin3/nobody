@@ -20,15 +20,11 @@ namespace Nobody
         uintptr_t fixtureIdB = reinterpret_cast<uintptr_t>(fixtureB);
 
         // 输出碰撞信息
-        std::cout << "Collision detected between fixture " << fixtureIdA << " and fixture " << fixtureIdB << std::endl;
+        //std::cout << "Collision detected between fixture " << fixtureIdA << " and fixture " << fixtureIdB << std::endl;
 
         // 将碰撞事件添加到数据结构中
         CollisionEvent event = { fixtureIdA, fixtureIdB };
         collisionEvents.push_back(event);
-   
-    }
-
-    void Collision::EndContact(b2Contact* contact) {
         // 处理所有与fixture相关的碰撞事件
         for (const CollisionEvent& event : collisionEvents) {
             b2Fixture* fixtureA = reinterpret_cast<b2Fixture*>(event.fixtureA);
@@ -43,14 +39,20 @@ namespace Nobody
 
             if (fixtureA->GetBody()->GetLinearVelocity().Length() > fixtureB->GetBody()->GetLinearVelocity().Length() * 1.05) {
                 float minus = fixtureA->GetBody()->GetLinearVelocity().Length() - fixtureB->GetBody()->GetLinearVelocity().Length();
-                gameObjectB->SetLife(gameObjectB->GetLife() - minus);
+                gameObjectB->SetLife(gameObjectB->GetLife() - 0.3 * minus);
+                //std::cout << "B attaced" << fixtureA->GetBody()->GetLinearVelocity().Length() << "   " << fixtureB->GetBody()->GetLinearVelocity().Length() << std::endl;
             }
 
             if (fixtureA->GetBody()->GetLinearVelocity().Length() * 1.05 < fixtureB->GetBody()->GetLinearVelocity().Length()) {
                 float minus = -fixtureA->GetBody()->GetLinearVelocity().Length() + fixtureB->GetBody()->GetLinearVelocity().Length();
                 gameObjectA->SetLife(gameObjectA->GetLife() - 0.3 * minus);
+                //std::cout << "A attaced" << fixtureA->GetBody()->GetLinearVelocity().Length() << "   " << fixtureB->GetBody()->GetLinearVelocity().Length() << std::endl;
             }
         }
+    }
+
+    void Collision::EndContact(b2Contact* contact) {
+
 
         // 从数据结构中删除所有与fixture相关的碰撞事件
         collisionEvents.clear();

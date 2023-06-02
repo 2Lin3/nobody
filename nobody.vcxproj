@@ -138,6 +138,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="include\Background.h" />
     <ClInclude Include="include\Boundary.h" />
     <ClInclude Include="include\Component.h" />
     <ClInclude Include="include\Game.h" />
@@ -150,10 +151,12 @@
     <ClInclude Include="include\RigidComponent.h" />
     <ClInclude Include="include\SpriteComponent.h" />
     <ClInclude Include="include\Timer.h" />
+    <ClInclude Include="include\TrickPawn.h" />
     <ClInclude Include="mission.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="src\Background.cpp" />
     <ClCompile Include="src\Boundary.cpp" />
     <ClCompile Include="src\Component.cpp" />
     <ClCompile Include="src\Game.cpp" />
@@ -167,6 +170,7 @@
     <ClCompile Include="src\RigidComponent.cpp" />
     <ClCompile Include="src\SpriteComponent.cpp" />
     <ClCompile Include="src\Timer.cpp" />
+    <ClCompile Include="src\TrickPawn.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

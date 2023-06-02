@@ -33,6 +33,10 @@ namespace Nobody
 		friend Vector2 operator*(float scalar, const Vector2& vec);
 		//! 向量相等
 		friend bool operator==(const Vector2& a, const Vector2& b);
+		// 添加到Vector2类
+		float Distance(const Vector2& other) const;
+
+		Vector2 Normalized() const;
 	};
 }
 

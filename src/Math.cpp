@@ -1,7 +1,7 @@
 //! @file Math.cpp
 
 #include	<Mathg.h>
-
+#include	<cmath>
 
 namespace Nobody
 {
@@ -56,4 +56,20 @@ namespace Nobody
 	{
 		return (a.x == b.x && a.y == b.y);
 	}
+
+	// ÃÌº”µΩVector2¿‡
+	float Vector2::Distance(const Vector2& other) const
+	{
+		float dx = x - other.x;
+		float dy = y - other.y;
+		return std::sqrt(dx * dx + dy * dy);
+	}
+
+
+	Vector2 Vector2::Normalized() const
+	{
+		float length = std::sqrt(x * x + y * y);
+		return Vector2(x / length, y / length);
+	}
+
 }

@@ -2,7 +2,7 @@
 #include	<GameObject.h>
 #include	<Game.h>
 #include	<SDL.h>
-
+#include	<RigidComponent.h>
 namespace Nobody
 {
 
@@ -11,7 +11,8 @@ namespace Nobody
 		mTexture(nullptr),
 		mTexWidth(0),
 		mTexHeight(0),
-		mDrawOrder(drawOrder)
+		mDrawOrder(drawOrder),
+		mIsBackground(false)
 	{
 		mGameObject->GetGame()->CreateSprite(this);
 	}
@@ -30,13 +31,49 @@ namespace Nobody
 
 		// 贴图即将被绘制的位置
 		SDL_Rect dstrect;
-		dstrect.w = static_cast<int>(mTexWidth * mGameObject->GetScale().x);
-		dstrect.h = static_cast<int>(mTexHeight * mGameObject->GetScale().y);
-		dstrect.x = static_cast<int>(mGameObject->GetPosition().x);
-		dstrect.y = static_cast<int>(mGameObject->GetPosition().y);
+
+		if (!mIsBackground)
+		{
+			dstrect.w = static_cast<int>(mTexWidth * mGameObject->GetScale().x);
+			dstrect.h = static_cast<int>(mTexHeight * mGameObject->GetScale().y);
+			dstrect.x = static_cast<int>(mGameObject->GetPosition().x - mTexWidth * mGameObject->GetScale().x / 2);
+			dstrect.y = static_cast<int>(mGameObject->GetPosition().y - mTexHeight * mGameObject->GetScale().y / 2);
+
+		}
+		else
+		{
+			dstrect.w = 1280;
+			dstrect.h = 800;
+			dstrect.x = static_cast<int>(mGameObject->GetPosition().x);
+			dstrect.y = static_cast<int>(mGameObject->GetPosition().y);
+		}
+
+		RigidComponent* rc = mGameObject->GetComponent<RigidComponent>();
+		if (rc)
+		{
+			b2Body* body = rc->GetmBody();
+
+			// 获取物体的速度向量
+			b2Vec2 velocity = body->GetLinearVelocity();
+
+			// 计算速度向量的角度（弧度）
+			float angleInRadians = atan2(velocity.y, velocity.x);
+
+			// 将弧度转换为度
+			float desiredRotationInDegrees = angleInRadians * (180.0f / M_PI);
+
+			// 绘制贴图（考虑旋转）
+			SDL_RenderCopyEx(renderer, mTexture, nullptr, &dstrect, desiredRotationInDegrees - 90, nullptr, SDL_FLIP_NONE);
+		}
+		else
+		{
+			// 如果 RigidComponent 不存在，可以根据需要添加一些逻辑，或者直接返回
+			SDL_RenderCopyEx(renderer, mTexture, nullptr, &dstrect, 0, nullptr, SDL_FLIP_NONE);
+		}
 		// 绘制贴图（考虑旋转）
-		SDL_RenderCopyEx(renderer, mTexture, nullptr, &dstrect, mGameObject->GetRotation(), nullptr, SDL_FLIP_NONE);
+		//SDL_RenderCopyEx(renderer, mTexture, nullptr, &dstrect, mGameObject->GetRotation(), nullptr, SDL_FLIP_NONE);
 	}
+
 
 	void SpriteComponent::SetTexture(SDL_Texture* texture)
 	{
@@ -65,5 +102,8 @@ namespace Nobody
 		mDrawOrder = order;
 	}
 
+	void SpriteComponent::SetIsBackground(bool IsBackground) {
+		mIsBackground = IsBackground;
+	}
 
 }

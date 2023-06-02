@@ -32,7 +32,11 @@ namespace Nobody
 		//! »æÖÆË³ÐòµÄgetºÍset
 		int		GetDrawOrder() const;
 		void	SetDrawOrder(int order);
+		void	SetIsBackground(bool IsBackground);
 
+	private:
+
+		bool mIsBackground = false; // ÊÇ±³¾°Âð
 	protected:
 		SDL_Texture* mTexture;		//!<	ÌùÍ¼		
 		int				mDrawOrder;		//!<	»æÖÆË³Ðò

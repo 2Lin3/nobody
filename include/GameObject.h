@@ -8,6 +8,7 @@
 #include	<vector>
 #include	<mathg.h>
 #include	<box2d/box2d.h>
+#include	<SDL.h>
 namespace Nobody
 {
 	class GameObject
@@ -24,6 +25,8 @@ namespace Nobody
 		GameObject(class Game* game, b2World* world);
 		//! 析构函数
 		virtual ~GameObject();
+		//! 特殊绘制
+		virtual void Draw(SDL_Renderer* renderer);
 		//! 处理键盘输入
 		void	ProcessInput(const uint8_t* state);
 		//！处理鼠标移动输入
@@ -31,7 +34,7 @@ namespace Nobody
 		//! 处理鼠标按键输入
 		void	ProcessInputMouseDown(int state, float* mBoost);
 		//! 每帧更新
-		void	Update();
+		virtual void	Update();
 		//! 添加组件
 		void	AddComponent(class Component* component);
 		//! 移除组件
@@ -69,6 +72,8 @@ namespace Nobody
 		//! 生命值的get和set
 		float		GetLife() const;
 		void		SetLife(float r);
+
+
 
 	protected:
 		std::vector<class Component*>	mComponents;	//!<	组件数组

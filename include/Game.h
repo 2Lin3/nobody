@@ -9,7 +9,8 @@
 #include	<box2d/box2d.h>
 #include	<SDL_ttf.h>
 #include	<memory>
-
+#include	<Mathg.h>
+#include	<random>
 
 struct SDL_Window;
 struct SDL_Renderer;
@@ -27,6 +28,8 @@ namespace Nobody
 	class FooDraw;
 	class Pawn;
 	class Collision;
+	class Background;
+	class TrickPawn;
 
 	class Game
 	{
@@ -40,6 +43,7 @@ namespace Nobody
 		void	Loop();
 		//!	游戏结束
 		void	Shutdown();
+		Vector2 GenRandomPosition(const Vector2& playerPos);
 
 		//! 创建并存储游戏物体
 		void	CreateGameObject(GameObject* gameObject);
@@ -51,8 +55,16 @@ namespace Nobody
 		void	RemoveSprite(SpriteComponent* sprite);
 		//! 获取贴图
 		SDL_Texture* GetTexture(const std::string& fileName);
-
-
+		//!	获得窗口宽度与高度
+		int GetScreenWidth();
+		int GetScreenHeight();
+		//!	获得player
+		Player* GetPlayer() const;
+		//!	获得时间
+		float GetDeltaTime() const;
+		void RenderText(SDL_Renderer* renderer, TTF_Font* font, const std::string& text,
+			SDL_Color color, SDL_Rect& textRect);
+		void LimitUpBorder(GameObject* gameObject);
 	private:
 		//!	处理事件
 		void	Event();
@@ -69,12 +81,13 @@ namespace Nobody
 		//!	加载贴图并重命名
 		void	LoadTexture(const std::string& fileName, const std::string& newName);
 
+
 		std::vector<GameObject*> mGameObjects;		//!<	游戏物体容器
 		std::vector<GameObject*> mPendingObjects;	//!<	等待状态的游戏物体容器
 		std::vector<SpriteComponent*> mSprites;		//!<	存放精灵的容器
-		std::vector<Pawn*> mEnemies;				//!<	存放敌人的容器
+		std::vector<GameObject*> mEnemies;				//!<	存放敌人的容器
 
-
+		std::mt19937 mRngEngine;					//!<	随机种子
 		bool leftMousePressed = false;
 		bool rightMousePressed = false;
 
@@ -92,9 +105,10 @@ namespace Nobody
 
 		Player* mPlayer;		//!<	玩家角色
 		Boundary* mBoundary;		//!<	边界
-
+		Background* mBackground;	//!<	背景
 		//测试敌人
-		Pawn* testEmeny = nullptr;
+		Pawn* testEnemy = nullptr;
+		TrickPawn* trickEnemy = nullptr;
 		// Box2D世界
 		b2World* mWorld;
 		// 指定每秒模拟的步数
@@ -103,7 +117,11 @@ namespace Nobody
 		const int velocityIterations = 6;
 		const int positionIterations = 2;
 
-		//string currentTimeString;		//!<	累计时间
+		float mSpawnTimer = 0;//计时器
+
+		int score = 0;  // 分数
+		SDL_Rect scoreTextRect = { 1000, 20, 100, 50 };
+		SDL_Color scoreColor = { 255, 255, 255 };
 	};
 }
 

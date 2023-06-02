@@ -20,7 +20,6 @@ namespace Nobody
 		void	ProcessInput(const uint8_t* state) override;
 		void	ProcessInputMouse(float mousex, float mousey)override;
 		void	ProcessInputMouseDown(int state, float* mBoost)override;
-
 	};
 }
 

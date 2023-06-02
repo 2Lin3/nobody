@@ -3,7 +3,8 @@
 #include	<GameObject.h>
 #include	<Game.h>
 #include	<Component.h>
-
+#include	<RigidComponent.h>
+#include	<iostream>
 namespace Nobody
 {
 	GameObject::GameObject(Game* game, b2World* world) :
@@ -72,6 +73,10 @@ namespace Nobody
 				component->Update();
 			}
 		}
+
+		if (mLife == 0) {
+			mState = State::EDead;
+		}
 	}
 
 	void GameObject::AddComponent(Component* component)
@@ -97,6 +102,11 @@ namespace Nobody
 		{
 			mComponents.erase(iter);
 		}
+	}
+
+	void GameObject::Draw(SDL_Renderer* renderer)
+	{
+		
 	}
 
 	Game* GameObject::GetGame() const

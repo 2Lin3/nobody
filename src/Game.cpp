@@ -14,7 +14,11 @@
 #include	<thread>
 #include	<SDL_ttf.h>
 #include	<Pawn.h>
+#include	<TrickPawn.h>
+#include	<random>
 #include	<Collision.h>
+#include	<Background.h>
+#include	<iostream>
 using namespace std;
 
 namespace Nobody
@@ -41,7 +45,7 @@ namespace Nobody
 		}
 
 		// 窗口初始化
-		mWindow = SDL_CreateWindow("Nobody", 400, 200, scene_width, scene_height, 0);
+		mWindow = SDL_CreateWindow("Nobody", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, scene_width, scene_height, 0);
 		if (!mWindow)
 		{
 			SDL_Log("Failed to create window: %s", SDL_GetError());
@@ -80,16 +84,56 @@ namespace Nobody
 		// 这意味着鼠标不会出现在屏幕上，也无法移动出窗口
 		SDL_SetRelativeMouseMode(SDL_TRUE);
 		// 加载OTF字体文件
-		font = TTF_OpenFont("SDL2_ttf-2.20.2/Mantinia.otf", 200);
+		font = TTF_OpenFont("SDL2_ttf-2.20.2/Mantinia.otf", 50);
 		// 获取窗口表面
 		SDL_Surface* windowSurface = SDL_GetWindowSurface(mWindow);
 		// 设置碰撞监听器
 		Collision* contactListener = new Collision();
 		mWorld->SetContactListener(contactListener);
+		
+		//随机种子初始化
+		std::random_device rd;
+		mRngEngine = std::mt19937(rd());
 
 		// 加载数据
 		LoadData();
 
+		// 渲染开始文本
+		SDL_Color textColor = { 255, 255, 255, 255 };
+		SDL_Surface* textSurface = TTF_RenderText_Solid(font, "Press any key to start", textColor);
+		SDL_Texture* textTexture = SDL_CreateTextureFromSurface(mRenderer, textSurface);
+		SDL_FreeSurface(textSurface);
+
+		SDL_Rect textRect;
+		SDL_QueryTexture(textTexture, NULL, NULL, &textRect.w, &textRect.h);
+		textRect.x = (scene_width - textRect.w) / 2;
+		textRect.y = (scene_height - textRect.h) / 2;
+
+		// 绘制开始文本
+		SDL_RenderClear(mRenderer);
+		SDL_RenderCopy(mRenderer, textTexture, NULL, &textRect);
+		SDL_RenderPresent(mRenderer);
+
+		// 等待用户按下任意键
+		bool gameStarted = false;
+		while (!gameStarted)
+		{
+			SDL_Event event;
+			while (SDL_PollEvent(&event))
+			{
+				switch (event.type)
+				{
+				case SDL_QUIT:
+					mIsRunning = false;
+					gameStarted = true;
+					break;
+				case SDL_KEYDOWN:
+					gameStarted = true;
+					break;
+				}
+			}
+			std::this_thread::sleep_for(std::chrono::milliseconds(3));
+		}
 		return true;
 	}
 
@@ -229,7 +273,6 @@ namespace Nobody
 		int mouseX, mouseY;
 		mIsUpdating = false;
 	}
-	int i = 1; //调试 后续删除
 	void Game::Update()
 	{
 		// 设置帧率
@@ -245,7 +288,22 @@ namespace Nobody
 		for (auto gameObject : mGameObjects)
 		{
 			gameObject->Update();
+			LimitUpBorder(gameObject);
 		}
+		mSpawnTimer += Timer::deltaTime;
+		if (mSpawnTimer >= 3.0f) {
+			mSpawnTimer = 0.0f; // 重置计时器
+			for (int i = 1; i < 2; i++) {
+				Vector2 randomPosition = GenRandomPosition(Vector2(600, -100));
+				//std::cout << randomPosition.x << randomPosition.y << endl;
+				testEnemy = new Pawn(this, mWorld, randomPosition);
+				mEnemies.push_back(testEnemy);
+				randomPosition = GenRandomPosition(Vector2(300, -100));
+				trickEnemy = new TrickPawn(this, mWorld, randomPosition);
+				mEnemies.push_back(trickEnemy);
+			}
+		}
+
 		// 更新结束
 		mIsUpdating = false;
 
@@ -262,6 +320,7 @@ namespace Nobody
 		if (leftMousePressed) mPlayer->ProcessInputMouseDown(SDL_BUTTON_LEFT, mPlayer->GetBoostValue());
 		if (rightMousePressed) mPlayer->ProcessInputMouseDown(SDL_BUTTON_RIGHT, mPlayer->GetBoostValue());
 		else mPlayer->ProcessInputMouseDown(SDL_BUTTON_MIDDLE, mPlayer->GetBoostValue());
+
 		// 将所有状态为EDead的物体添加至死亡区
 		std::vector<GameObject*> deadObjects;
 		for (auto deadObject : mGameObjects)
@@ -271,6 +330,21 @@ namespace Nobody
 				deadObjects.emplace_back(deadObject);
 			}
 		}
+		// 删除所有状态为EDead的敌人
+		mEnemies.erase(
+			std::remove_if(
+				mEnemies.begin(),
+				mEnemies.end(),
+				[this](GameObject* enemy) { 
+					if (enemy->GetState() == GameObject::State::EDead) {
+						score++;  // 增加玩家的分数
+						return true;  // 删除这个敌人
+					}
+		return false;  // 不删除这个敌人
+				}
+			),
+			mEnemies.end()
+					);
 		// 释放掉所有死亡区的物体
 		for (auto deadObject : deadObjects)
 		{
@@ -307,15 +381,24 @@ namespace Nobody
 		SDL_Rect lifeBar = { 0, scene_height- mPlayer->GetLife() * 3 - 50,50, mPlayer->GetLife()*3};
 		SDL_RenderFillRect(mRenderer, &lifeBar);
 
-		SDL_Surface* textSurface = TTF_RenderUTF8_Solid(font, "ACCELERATE", textColor);
-		SDL_Texture* textTexture = SDL_CreateTextureFromSurface(mRenderer, textSurface);
-		SDL_RenderCopy(mRenderer, textTexture, NULL, &textRect);
-		for (Pawn* enemy : mEnemies)
+		RenderText(mRenderer, font, "ACCELERATE", textColor, textRect);
+		// 将分数转换为字符串
+		std::string scoreText ="Score  " + std::to_string(score);
+
+		// 使用 RenderText 函数在指定的位置显示分数
+		RenderText(mRenderer, font, scoreText, scoreColor, scoreTextRect);
+
+		for (GameObject* enemy : mEnemies)
 		{
-			SDL_RenderDrawCircle(mRenderer, enemy->GetPosition().x, enemy->GetPosition().y, 15);
-			SDL_SetRenderDrawColor(mRenderer, 255, 255, 255, 0);
-			SDL_Rect enemyLife = { enemy->GetPosition().x - enemy->GetLife()/2, enemy->GetPosition().y - 30,enemy->GetLife(), 3  };
-			SDL_RenderFillRect(mRenderer, &enemyLife);
+			if (enemy->GetState() == GameObject::State::EActive)
+			{
+				enemy->Draw(mRenderer);
+			}
+			
+			//SDL_RenderDrawCircle(mRenderer, enemy->GetPosition().x, enemy->GetPosition().y, 15);
+			//SDL_SetRenderDrawColor(mRenderer, 255, 255, 255, 0);
+			//SDL_Rect enemyLife = { enemy->GetPosition().x - enemy->GetLife()/2, enemy->GetPosition().y - 30,enemy->GetLife(), 3  };
+			//SDL_RenderFillRect(mRenderer, &enemyLife);
 		}
 		// 交换缓冲区
 		SDL_RenderPresent(mRenderer);
@@ -326,12 +409,19 @@ namespace Nobody
 
 		LoadTexture("sprites/chrA07.png", "player");
 
+		LoadTexture("sprites/background_image.png", "background");
+		// 创建背景
+		mBackground = new Background(this, mWorld);
+		
 		mPlayer = new Player(this,mWorld);
+
 		mBoundary = new Boundary(this, mWorld);
-		for (int i = 1; i < 2; i++) {
-		testEmeny = new Pawn(this, mWorld, mPlayer->GetPosition());
-		mEnemies.push_back(testEmeny);
-		}
+		//for (int i = 1; i < 3; i++) {
+		//Vector2 randomPosition = GenRandomPosition(Vector2(600, 100));
+		//std::cout << randomPosition.x << randomPosition.y << endl;
+		//testEmeny = new Pawn(this, mWorld, randomPosition);
+		//mEnemies.push_back(testEmeny);
+		//}
 
 	}
 
@@ -345,7 +435,7 @@ namespace Nobody
 			SDL_Delay(1);
 		}
 
-		// 计算新的增量时间
+		// 计算新的增量时间+`	1
 		Timer::deltaTime = (SDL_GetTicks() - Timer::ticksCount) / 1000.0f;
 		// 计算新的一帧开始时所经过的总时间S
 		Timer::ticksCount = SDL_GetTicks();
@@ -395,5 +485,82 @@ namespace Nobody
 
 		// 将贴图加入到哈希表中，并将新名字作为key值
 		mTextures.emplace(newName, tex);
+	}
+	int Game::GetScreenWidth() {
+		return scene_width;
+	}
+
+	int Game::GetScreenHeight() {
+		return scene_height;
+	}
+
+	Player* Game::GetPlayer() const
+	{
+		return mPlayer;
+	}
+	float Game::GetDeltaTime() const
+	{
+		return Timer::deltaTime;
+	}
+
+	Vector2 Game::GenRandomPosition(const Vector2& playerPos) {
+		// 定义x和y坐标的随机范围
+		std::uniform_real_distribution<float> distX(playerPos.x - 200, playerPos.x + 200);
+		std::uniform_real_distribution<float> distY(playerPos.y - 200, playerPos.y + 200);
+
+		// 生成随机x和y坐标
+		float randomX = distX(mRngEngine);
+		float randomY = distY(mRngEngine);
+
+		// 创建一个随机位置向量
+		Vector2 randomPosition(randomX, randomY);
+
+		return randomPosition;
+	}
+
+	void Game::RenderText(SDL_Renderer* renderer, TTF_Font* font, const std::string& text,
+		SDL_Color color, SDL_Rect& textRect) {
+		SDL_Surface* textSurface = TTF_RenderUTF8_Solid(font, text.c_str(), color);
+		SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+
+		// Always remember to free the surface after creating texture
+		SDL_FreeSurface(textSurface);
+
+		// Render the texture
+		SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+
+		// Remember to destroy the texture after rendering
+		SDL_DestroyTexture(textTexture);
+	}
+
+	void Game::LimitUpBorder(GameObject* gameObject) {
+		try {
+			RigidComponent* rigidComponent = gameObject->GetComponent<RigidComponent>();
+
+			// Check if the game object has a RigidComponent
+			if (rigidComponent) {
+				b2Body* body = rigidComponent->GetmBody();
+
+				// Make sure the body is valid and dynamic (can move)
+				if (body && body->GetType() == b2_dynamicBody)
+				{
+					b2Vec2 velocity = body->GetLinearVelocity();
+
+					// If object is moving upward and is at the top of the screen
+					if (velocity.y < 0 && body->GetPosition().y <= 0 && body->GetPosition().y >= -10)
+					{
+						// Reverse its velocity along y axis
+						velocity.y *= -1;
+						body->SetLinearVelocity(velocity);
+					}
+				}
+			}
+		}
+		catch (const std::exception& e) {
+			std::cerr << "Caught exception in LimitObjectVelocity: " << e.what() << '\n';
+		}
+		catch (...) {
+			std::cerr << "Caught unknown exception in LimitObjectVelocity\n";
+		}
 	}
 }

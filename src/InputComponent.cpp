@@ -8,7 +8,7 @@
 #include	<Mathg.h>
 #include	<Game.h>
 #include	<RigidComponent.h>
-
+#include	<iostream>
 namespace Nobody
 {
 	InputComponent::InputComponent(GameObject* gameObject) :
@@ -26,6 +26,7 @@ namespace Nobody
 	void InputComponent::ProcessInputMouse(float mousex, float mousey) {
 		RigidComponent* mcc = mGameObject->GetComponent<RigidComponent>();
 		float MaxChange = 20;
+
 		last_mouse_x = scene_width/2;
 		last_mouse_y = scene_height/2;
 		// 计算鼠标位置的变化
@@ -35,6 +36,7 @@ namespace Nobody
 		dx = dx < -MaxChange ? -MaxChange : dx;
 		dy = dy > MaxChange ? MaxChange : dy;
 		dy = dy < -MaxChange ? -MaxChange : dy;
+
 		mcc->ApplyForce(Vector2(dx*100, dy*100));
 	}
 

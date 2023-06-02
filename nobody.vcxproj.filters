@@ -57,6 +57,12 @@
     <ClInclude Include="Collision.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\Background.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TrickPawn.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Component.cpp">
@@ -99,6 +105,12 @@
       <Filter>源</Filter>
     </ClCompile>
     <ClCompile Include="Collision.cpp">
+      <Filter>源</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Background.cpp">
+      <Filter>源</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TrickPawn.cpp">
       <Filter>源</Filter>
     </ClCompile>
   </ItemGroup>
