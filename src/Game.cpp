@@ -40,7 +40,7 @@ namespace Nobody
 	{
 		// SDL库初始化
 		if (SDL_Init(SDL_INIT_VIDEO) != 0)
-		{
+		{	
 			SDL_Log("Failed to initialize SDL: %s", SDL_GetError());
 			return false;
 		}
@@ -70,7 +70,8 @@ namespace Nobody
 
 		//初始化字库
 		if (TTF_Init() == -1) {
-			printf("TTF_Init: % s\n", TTF_GetError()); return false;
+			printf("TTF_Init: % s\n", TTF_GetError()); 
+			return false;
 		}
 
 		// 建立box2d世界
@@ -80,11 +81,12 @@ namespace Nobody
 			return false;
 		}
 		
-		// 在Initialize函数中创建OpenGL上下文
-		SDL_GLContext context = SDL_GL_CreateContext(mWindow);
-		if (!context) {
-			// handle error
-		}
+		//// 创建OpenGL
+		//SDL_GLContext context = SDL_GL_CreateContext(mWindow);
+		//if (!context) {
+		//	SDL_Log("Failed to create OpenGL");
+		//	return false;
+		//}
 
 		// 设置鼠标的相对模式
 		// 在相对模式下，鼠标的位置是相对于上一次的位置的偏移量
@@ -104,7 +106,12 @@ namespace Nobody
 
 		// 加载数据
 		LoadData();
+		// 开始等待玩家按下任意键
+		StartWaiting();
+		return true;
+	}
 
+	void Game::StartWaiting() {
 		// 渲染开始文本
 		SDL_Color textColor = { 255, 255, 255, 255 };
 		SDL_Surface* textSurface = TTF_RenderText_Solid(font, "Press any key to start", textColor);
@@ -136,13 +143,14 @@ namespace Nobody
 					break;
 				case SDL_KEYDOWN:
 					gameStarted = true;
+					mSpawnTimer = 0;//计时器归零
+					score = 0;  // 分数归零
 					break;
 				}
 			}
 			std::this_thread::sleep_for(std::chrono::milliseconds(3));
 		}
-		return true;
-	}
+	};
 
 	void Game::Loop()
 	{
@@ -154,6 +162,14 @@ namespace Nobody
 			std::this_thread::sleep_for(std::chrono::milliseconds(3));
 		}
 	}
+
+	void Game::ResetGame()
+	{
+		UnloadData();
+		LoadData();
+		StartWaiting();
+	}
+
 
 	void Game::Shutdown()
 	{

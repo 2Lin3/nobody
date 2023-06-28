@@ -11,7 +11,7 @@
 #include	<memory>
 #include	<Mathg.h>
 #include	<random>
-#include	<gl/gl.h>
+//#include	<gl/GL.h>
 
 struct SDL_Window;
 struct SDL_Renderer;
@@ -40,8 +40,12 @@ namespace Nobody
 
 		//!	初始化
 		bool	Initialize();
+		//!	StartWaiting
+		void StartWaiting();
 		//!	主循环
 		void	Loop();
+		//!	重开
+		void ResetGame();
 		//!	游戏结束
 		void	Shutdown();
 		Vector2 GenRandomPosition(const Vector2& playerPos);
@@ -119,9 +123,9 @@ namespace Nobody
 		const int velocityIterations = 6;
 		const int positionIterations = 2;
 
-		float mSpawnTimer = 0;//计时器
+		float mSpawnTimer;//计时器
 
-		int score = 0;  // 分数
+		int score;  // 分数
 		SDL_Rect scoreTextRect = { 1000, 20, 100, 50 };
 		SDL_Color scoreColor = { 255, 255, 255 };
 	};
