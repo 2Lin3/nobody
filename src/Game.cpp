@@ -19,6 +19,7 @@
 #include	<Collision.h>
 #include	<Background.h>
 #include	<iostream>
+#include	<BossPawn.h>
 using namespace std;
 
 namespace Nobody
@@ -79,6 +80,12 @@ namespace Nobody
 			return false;
 		}
 		
+		// 在Initialize函数中创建OpenGL上下文
+		SDL_GLContext context = SDL_GL_CreateContext(mWindow);
+		if (!context) {
+			// handle error
+		}
+
 		// 设置鼠标的相对模式
 		// 在相对模式下，鼠标的位置是相对于上一次的位置的偏移量
 		// 这意味着鼠标不会出现在屏幕上，也无法移动出窗口
@@ -273,6 +280,7 @@ namespace Nobody
 		int mouseX, mouseY;
 		mIsUpdating = false;
 	}
+	bool test = false;
 	void Game::Update()
 	{
 		// 设置帧率
@@ -288,22 +296,27 @@ namespace Nobody
 		for (auto gameObject : mGameObjects)
 		{
 			gameObject->Update();
-			LimitUpBorder(gameObject);
+			LimitUpBorder(gameObject);//upborder air wall
 		}
 		mSpawnTimer += Timer::deltaTime;
 		if (mSpawnTimer >= 3.0f) {
 			mSpawnTimer = 0.0f; // 重置计时器
 			for (int i = 1; i < 2; i++) {
-				Vector2 randomPosition = GenRandomPosition(Vector2(600, -100));
+				Vector2 randomPosition = GenRandomPosition(Vector2(600, -300));
 				//std::cout << randomPosition.x << randomPosition.y << endl;
 				testEnemy = new Pawn(this, mWorld, randomPosition);
 				mEnemies.push_back(testEnemy);
-				randomPosition = GenRandomPosition(Vector2(300, -100));
+				randomPosition = GenRandomPosition(Vector2(300, -300));
 				trickEnemy = new TrickPawn(this, mWorld, randomPosition);
 				mEnemies.push_back(trickEnemy);
+				if (!test) {
+					bossEnemy = new BossPawn(this, mWorld, Vector2(500, -500), mEnemies);
+					mEnemies.push_back(bossEnemy);
+					test = true;
+				}
+
 			}
 		}
-
 		// 更新结束
 		mIsUpdating = false;
 
@@ -409,6 +422,7 @@ namespace Nobody
 
 		LoadTexture("sprites/chrA07.png", "player");
 
+		LoadTexture("sprites/chrA07.png", "BossPawn");
 		LoadTexture("sprites/background_image.png", "background");
 		// 创建背景
 		mBackground = new Background(this, mWorld);
@@ -505,8 +519,8 @@ namespace Nobody
 
 	Vector2 Game::GenRandomPosition(const Vector2& playerPos) {
 		// 定义x和y坐标的随机范围
-		std::uniform_real_distribution<float> distX(playerPos.x - 200, playerPos.x + 200);
-		std::uniform_real_distribution<float> distY(playerPos.y - 200, playerPos.y + 200);
+		std::uniform_real_distribution<float> distX(playerPos.x - 100, playerPos.x + 100);
+		std::uniform_real_distribution<float> distY(playerPos.y - 100, playerPos.y + 100);
 
 		// 生成随机x和y坐标
 		float randomX = distX(mRngEngine);

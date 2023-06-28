@@ -11,6 +11,7 @@
 #include	<memory>
 #include	<Mathg.h>
 #include	<random>
+#include	<gl/gl.h>
 
 struct SDL_Window;
 struct SDL_Renderer;
@@ -30,7 +31,7 @@ namespace Nobody
 	class Collision;
 	class Background;
 	class TrickPawn;
-
+	class BossPawn;
 	class Game
 	{
 	public:
@@ -109,6 +110,7 @@ namespace Nobody
 		//测试敌人
 		Pawn* testEnemy = nullptr;
 		TrickPawn* trickEnemy = nullptr;
+		BossPawn* bossEnemy = nullptr;
 		// Box2D世界
 		b2World* mWorld;
 		// 指定每秒模拟的步数

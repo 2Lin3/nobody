@@ -12,10 +12,10 @@ namespace Nobody
 		enum class PawnType { Player, AI };
 
 		//! ¹¹Ôìº¯Êý
-		Pawn(class Game* game, b2World* world, const Vector2& playerPos, PawnType type = PawnType::AI);
+		Pawn(class Game* game, b2World* world, const Vector2& GeneratePos, PawnType type = PawnType::AI);
 
-		bool isValidPosition(float x, float y, const Vector2& playerPos);
-		Vector2 GenerateRandomPosition(const Vector2& playerPos);
+		bool isValidPosition(float x, float y, const Vector2& GeneratePos);
+		Vector2 GenerateRandomPosition(const Vector2& GeneratePos);
 		//void SetVelocity(const Vector2& velocity);
 		void Update() override;
 		void Draw(SDL_Renderer* renderer) override;

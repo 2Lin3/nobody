@@ -3,6 +3,7 @@
 #include	<Game.h>
 #include	<SDL.h>
 #include	<RigidComponent.h>
+#include	<iostream>
 namespace Nobody
 {
 
@@ -64,6 +65,10 @@ namespace Nobody
 
 			// »æÖÆÌùÍ¼£¨¿¼ÂÇÐý×ª£©
 			SDL_RenderCopyEx(renderer, mTexture, nullptr, &dstrect, desiredRotationInDegrees - 90, nullptr, SDL_FLIP_NONE);
+
+			//DrawSector(renderer, dstrect.x, dstrect.y, 3 * SCALE * 3,
+			//	desiredRotationInDegrees +90,
+			//	desiredRotationInDegrees +270);
 		}
 		else
 		{

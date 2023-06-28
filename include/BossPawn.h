@@ -1,16 +1,16 @@
 #pragma once
-#ifndef __Nobody_TrickPawn__
-#define __Nobody_TrickPawn__
+#ifndef __Nobody_BossPawn__
+#define __Nobody_BossPawn__
 
 #include	<GameObject.h>
 
 namespace Nobody
 {
-	class TrickPawn : public GameObject
+	class BossPawn : public GameObject
 	{
 	public:
-		enum class TrickPawnType { Player, AI };
-		enum class TrickPawnState {
+		enum class BossPawnType { Player, AI };
+		enum class BossPawnState {
 			Lurking, // 伺机待发
 			Attacking, // 进攻
 			Escaping, // 逃亡
@@ -18,7 +18,7 @@ namespace Nobody
 			Resting // 休息
 		};
 		//! 构造函数
-		TrickPawn(class Game* game, b2World* world, const Vector2& GeneratePos, TrickPawnType type = TrickPawnType::AI);
+		BossPawn(class Game* game, b2World* world, const Vector2& GeneratePos, const std::vector<GameObject*>& enemies, BossPawnType type = BossPawnType::AI);
 
 		bool isValidPosition(float x, float y, const Vector2& GeneratePos);
 		Vector2 GenerateRandomPosition(const Vector2& GeneratePos);
@@ -33,33 +33,44 @@ namespace Nobody
 		void EscapeBehavior();
 		void DeceiveBehavior();
 		void RestBehavior();
+		void DrawSector(SDL_Renderer* renderer, int x, int y, int radius, int start_angle, int end_angle)
+		{
+			for (int i = start_angle; i < end_angle; ++i)
+			{
+				int dx = radius * -cos(i * M_PI / 180.0);
+				int dy = radius * -sin(i * M_PI / 180.0);
+				SDL_RenderDrawLine(renderer, x, y, x + dx, y + dy);
+			}
+		}
 
 	private:
-		TrickPawnState mState;// 当前状态
-
+		BossPawnState mState;// 当前状态
+		std::vector<GameObject*>enemies;
+		int currentAngleDegrees = 0;
 		void UpdateAI();
 		void AttackTarget(int Case, Vector2 pos);
-		float mSpeed = 100.0f; // TrickPawn移动速度
+		float mSpeed = 150.0f; // BossPawn移动速度
 		float mDetectionRange = 300.0f; // 检测玩家的范围
 		float mCurrentTime = 0.0f; // 当前时间（从游戏开始算起）
 		float mLastChargeTime = -5.0f; // 上次冲撞的时间
 		float mScreenBottom = 750; // 屏幕底部的y坐标
-		TrickPawnType mType;
-		float radius = 1.5f;
-		float mSmallForceMagnitude = 50;
-		float mLargeForceMagnitude = 5000;
+		BossPawnType mType;
+		float radius = 3.0f;
+		float mSmallForceMagnitude = 1000;
+		float mLargeForceMagnitude = 30000;
 		float mLastPlayerChargeTime; // 上次冲撞玩家的时间
 		float mLastBottomChargeTime; // 上次冲撞底部的时间
 		float mLastDownForceTime; // 上次向下施加力的时间;
 		bool Charging = false;
 		int AttactCase = 0;//碰撞情况
 		float leftime = 0;
-		float timeWidth = 0.8;//蓄力动画时长
-		float dampv = 0.8;
-		float cooltime = 5.0f;//冲击CD
+		float timeWidth = 0.4;//蓄力动画时长
+		float dampv = 0.4;
+		float cooltime = 3.0f;//冲击CD
 		Vector2 forceDirection = Vector2::Zero; // 设置施加力的方向
 		float forceMagnitude = 0.0f;
+		b2Body* mpawn;
 	};
 }
 
-#endif	// __Nobody_TrickPawn__
+#endif	// __Nobody_BossPawn__

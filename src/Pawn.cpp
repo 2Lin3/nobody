@@ -10,15 +10,15 @@
 #include	<iostream>
 namespace Nobody
 {
-	Pawn::Pawn(Game* game, b2World* world, const Vector2& playerPos, PawnType type) :
+	Pawn::Pawn(Game* game, b2World* world, const Vector2& GeneratePos, PawnType type) :
 		GameObject(game, world),
 		mType(type),
         mLastPlayerChargeTime(0.0f),
         mLastBottomChargeTime(0.0f),
         mLastDownForceTime(0.0f)
 	{
-		Vector2 pos = GenerateRandomPosition(playerPos);
-		SetPosition(playerPos);
+		Vector2 pos = GenerateRandomPosition(GeneratePos);
+		SetPosition(GeneratePos);
 		InputComponent* inputComponent = new InputComponent(this);
 		RigidComponent* rigidComponent = new RigidComponent(this, b2_dynamicBody);
 		rigidComponent->SetMass(0.5);
@@ -32,21 +32,21 @@ namespace Nobody
 	}
 
 	// 生成随机位置
-	Vector2 Pawn::GenerateRandomPosition(const Vector2& playerPos) {
+	Vector2 Pawn::GenerateRandomPosition(const Vector2& GeneratePos) {
 		// 生成随机数生成器
 		std::mt19937 generator(time(0));
 		std::uniform_real_distribution<float> distribution(-100.0f, 100.0f);	
 		float x, y;
 		do {
-			x = playerPos.x + distribution(generator);
-			y = playerPos.y + distribution(generator);
-		} while (!isValidPosition(x, y, playerPos));
+			x = GeneratePos.x + distribution(generator);
+			y = GeneratePos.y + distribution(generator);
+		} while (!isValidPosition(x, y, GeneratePos));
 
 		return Vector2(x, y);
 	}
 	// 判断距离是否大于100
-	bool Pawn::isValidPosition(float x, float y, const Vector2& playerPos) {
-		return std::sqrt(std::pow(x - playerPos.x, 2) + std::pow(y - playerPos.y, 2)) > 100.0f;
+	bool Pawn::isValidPosition(float x, float y, const Vector2& GeneratePos) {
+		return std::sqrt(std::pow(x - GeneratePos.x, 2) + std::pow(y - GeneratePos.y, 2)) > 100.0f;
 	}
 	void Pawn::Update()
 	{

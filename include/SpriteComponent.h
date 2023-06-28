@@ -4,6 +4,7 @@
 #define __Nobody_SpriteComponent__
 
 #include	<Component.h>
+#include	<SDL.h>
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -33,6 +34,16 @@ namespace Nobody
 		int		GetDrawOrder() const;
 		void	SetDrawOrder(int order);
 		void	SetIsBackground(bool IsBackground);
+		void DrawSector(SDL_Renderer* renderer, int x, int y, int radius, int start_angle, int end_angle)
+		{
+			for (int i = start_angle; i < end_angle; ++i)
+			{
+				int dx = radius * -cos(i * M_PI / 180.0);
+				int dy = radius * -sin(i * M_PI / 180.0);
+				SDL_RenderDrawLine(renderer, x, y, x + dx, y + dy);
+			}
+		}
+
 
 	private:
 

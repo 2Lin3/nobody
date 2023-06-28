@@ -18,7 +18,7 @@ namespace Nobody
 		SetPosition(Vector2(640, 600));
 		InputComponent* inputComponent = new InputComponent(this);
 		RigidComponent* rigidComponent = new RigidComponent(this,b2_dynamicBody);
-		rigidComponent->SetMass(3);
+		rigidComponent->SetMass(2);
 		b2CircleShape circle;
 		mCircleRadius = 2.0f;
 		circle.m_radius = mCircleRadius; // ÉèÖÃÔ²µÄ°ë¾¶
@@ -29,7 +29,7 @@ namespace Nobody
 		float scaleFactorX = (2 * mCircleRadius * 10) / sprite->GetTexWidth();
 		float scaleFactorY = (2 * mCircleRadius * 10) / sprite->GetTexHeight();
 		SetScale(Vector2(scaleFactorX, scaleFactorY));
-		SetLife(100);
+		SetLife(10000);
 		//MoveComponent* moveComponent = new MoveComponent(this);
 		//moveComponent->SetDir(Vector2(mplayer->GetLinearVelocity().x, mplayer->GetLinearVelocity().y));
 	}
