@@ -81,6 +81,19 @@ namespace Nobody
 			return false;
 		}
 		
+		// 初始化道具列表
+		try
+		{
+			for (int i = 0; i < static_cast<int>(BoostType::End); ++i) {
+				items.push_back(Item(static_cast<BoostType>(i)));
+			}
+		}
+		catch (const std::exception&)
+		{
+			SDL_Log("Failed to create items");
+			return false;
+		}
+
 		//// 创建OpenGL
 		//SDL_GLContext context = SDL_GL_CreateContext(mWindow);
 		//if (!context) {
@@ -330,6 +343,21 @@ namespace Nobody
 		}
 		// 设置帧率
 		Tick(60);
+		if (mIsChoosingProps) {
+			// 取消鼠标的相对模式
+			SDL_SetRelativeMouseMode(SDL_FALSE);
+			// 显示鼠标
+			SDL_ShowCursor(SDL_ENABLE);
+			std::shuffle(items.begin(), items.end(), mRngEngine);
+			std::vector<Item> selectedItems(items.begin(), items.begin() + 3);
+
+			////隐藏鼠标
+			//SDL_ShowCursor(SDL_DISABLE);
+			//// 设置鼠标为相对模式
+			//SDL_SetRelativeMouseMode(SDL_TRUE);
+			return;
+		}
+
 		//当前时间
 		Uint32 currentTime = SDL_GetTicks();
 		string currentTimeString = to_string(currentTime/1000);

@@ -11,6 +11,8 @@
 #include	<memory>
 #include	<Mathg.h>
 #include	<random>
+#include	<Item.h>
+#include	"Pawn.h"
 //#include	<gl/GL.h>
 
 struct SDL_Window;
@@ -28,11 +30,13 @@ namespace Nobody
 	class Boundary;
 	class FooDraw;
 	class Pawn;
+	class Item;
 	class Collision;
 	class Background;
 	class TrickPawn;
 	class BossPawn;
 	class Game
+	
 	{
 	public:
 		//!	构造函数
@@ -94,6 +98,7 @@ namespace Nobody
 		std::vector<GameObject*> mPendingObjects;	//!<	等待状态的游戏物体容器
 		std::vector<SpriteComponent*> mSprites;		//!<	存放精灵的容器
 		std::vector<GameObject*> mEnemies;			//!<	存放敌人的容器
+		std::vector<Item> items;					//!<	存放道具的容器
 
 		std::mt19937 mRngEngine;					//!<	随机种子
 		bool leftMousePressed = false;

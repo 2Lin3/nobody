@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __Nobody_Pawn__
-#define __Nobody_Pawn__
+#ifndef __Nobody_Item__
+#define __Nobody_Item__
 
 #include	<GameObject.h>
 #include    <Player.h>
@@ -8,12 +8,14 @@
 namespace Nobody
 {
     enum class BoostType {
-        SPEED_BOOST,
+        Accelerate_Capacity_BOOST,
         MAX_HEALTH_BOOST,
         ATTACK_BOOST,
         CRITICAL_HIT_CHANCE_BOOST,
-        CRITICAL_HIT_DAMAGE_BOOST
+        CRITICAL_HIT_DAMAGE_BOOST,
+        End  
     };
+
 
     class Item {
     public:
