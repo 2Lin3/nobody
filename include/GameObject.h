@@ -50,7 +50,7 @@ namespace Nobody
 				{
 					return component;
 				}
-			}
+			}	
 			return nullptr;
 		}
 		//! game对象的get
@@ -74,7 +74,7 @@ namespace Nobody
 		void		SetLife(float r);
 
 
-
+		bool isPlayer = false;
 	protected:
 		std::vector<class Component*>	mComponents;	//!<	组件数组
 

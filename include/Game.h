@@ -72,6 +72,7 @@ namespace Nobody
 		void LimitUpBorder(GameObject* gameObject);
 		//!	player 噶了
 		void RenderDeathMessage();
+		bool			mIsChoosingProps = false;//!<		设置选择道具的显示标志
 	private:
 		//!	处理事件
 		void	Event();
@@ -111,7 +112,8 @@ namespace Nobody
 		bool			mIsRunning;		//!<	运行状态
 		bool			mIsDEAD;		//!<	是否死亡
 		bool			mIsUpdating;	//!<	是否在更新状态
-		bool			mIsPauseMenuVisible = false;//!<		设置暂停菜单的显示标志
+		bool			mIsPauseMenuVisible = false;//!<	设置暂停菜单的显示标志
+		
 
 		Player* mPlayer;		//!<	玩家角色
 		Boundary* mBoundary;		//!<	边界

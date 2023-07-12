@@ -144,7 +144,9 @@
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\GameObject.h" />
     <ClInclude Include="include\InputComponent.h" />
+    <ClInclude Include="include\Item.h" />
     <ClInclude Include="include\Mathg.h" />
+    <ClInclude Include="include\MeatPigeonPowerup.h" />
     <ClInclude Include="include\MoveComponent.h" />
     <ClInclude Include="include\Pawn.h" />
     <ClInclude Include="include\Player.h" />
@@ -163,6 +165,7 @@
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\InputComponent.cpp" />
+    <ClCompile Include="src\Item.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Math.cpp" />
     <ClCompile Include="src\MoveComponent.cpp" />

@@ -5,6 +5,7 @@
 #include<box2d/box2d.h>
 #include<RigidComponent.h>
 #include<iostream>
+#include<Player.h>
 namespace Nobody
 {
     void Collision::BeginContact(b2Contact* contact) {
@@ -36,16 +37,51 @@ namespace Nobody
 
             GameObject* gameObjectA = reinterpret_cast<GameObject*>(fixtureA->GetBody()->GetUserData().pointer);
             GameObject* gameObjectB = reinterpret_cast<GameObject*>(fixtureB->GetBody()->GetUserData().pointer);
+            bool AisPlayer = false;
+            bool BisPlayer = false;
+            Player* playerA = dynamic_cast<Player*>(gameObjectA);
+            Player* playerB = dynamic_cast<Player*>(gameObjectB);
+            float damage;
+            if (playerA) { // 如果 gameObjectA 是 Player
+                AisPlayer = true;
+                float critChance = *playerA->GetCrit_rate();
+                float critDamage = *playerA->GetCrit_damage();
+                float damageRate = *playerA->GetDamage_rate();
+                // 暴击判断和伤害计算
+                if (static_cast<float>(rand()) / RAND_MAX < critChance) {
+                    damage = critDamage * damageRate;
+                    //std::cout << "Crit" << std::endl;
+                }
+                else {
+                    damage = damageRate;
+                }
+            }
+            if (playerB) { // 如果 gameObjectB 是 Player
+                BisPlayer = true;
+                float critChance = *playerB->GetCrit_rate();
+                float critDamage = *playerB->GetCrit_damage();
+                float damageRate = *playerB->GetDamage_rate();
+                // 暴击判断和伤害计算
+                if (static_cast<float>(rand()) / RAND_MAX < critChance) {
+                    damage = critDamage * damageRate;
+                    //std::cout << "Crit" << std::endl;
+                }
+                else {
+                    damage = damageRate;
+                }
+            }
 
             if (fixtureA->GetBody()->GetLinearVelocity().Length() > fixtureB->GetBody()->GetLinearVelocity().Length() * 1.05) {
                 float minus = fixtureA->GetBody()->GetLinearVelocity().Length() - fixtureB->GetBody()->GetLinearVelocity().Length();
-                gameObjectB->SetLife(gameObjectB->GetLife() - 0.3 * minus);
+                if(!AisPlayer) damage = 1;
+				gameObjectB->SetLife(gameObjectB->GetLife() - 0.3 * minus * damage);
                 //std::cout << "B attaced" << fixtureA->GetBody()->GetLinearVelocity().Length() << "   " << fixtureB->GetBody()->GetLinearVelocity().Length() << std::endl;
             }
 
             if (fixtureA->GetBody()->GetLinearVelocity().Length() * 1.05 < fixtureB->GetBody()->GetLinearVelocity().Length()) {
                 float minus = -fixtureA->GetBody()->GetLinearVelocity().Length() + fixtureB->GetBody()->GetLinearVelocity().Length();
-                gameObjectA->SetLife(gameObjectA->GetLife() - 0.3 * minus);
+                if (!BisPlayer) damage = 1;
+                gameObjectA->SetLife(gameObjectA->GetLife() - 0.3 * minus * damage);
                 //std::cout << "A attaced" << fixtureA->GetBody()->GetLinearVelocity().Length() << "   " << fixtureB->GetBody()->GetLinearVelocity().Length() << std::endl;
             }
         }

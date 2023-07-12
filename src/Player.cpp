@@ -13,6 +13,7 @@ namespace Nobody
 	Player::Player(Game* game, b2World* world):
 		GameObject(game,world)
 	{
+		isPlayer = true;
 		SpriteComponent* sprite = new SpriteComponent(this, 100);
 		sprite->SetTexture(GetGame()->GetTexture("player"));
 		SetPosition(Vector2(640, 600));
@@ -32,6 +33,17 @@ namespace Nobody
 		SetLife(30);
 		//MoveComponent* moveComponent = new MoveComponent(this);
 		//moveComponent->SetDir(Vector2(mplayer->GetLinearVelocity().x, mplayer->GetLinearVelocity().y));
+	}
+	void Player::Update()
+	{
+		GameObject::Update();
+
+		if (mExp >= neededExp) {
+			mLevel++;
+			mExp = mExp - neededExp;
+			neededExp = neededExp + 3;
+			GetGame()->mIsChoosingProps = true;
+		}
 	}
 	float* Player::GetBoostValue() {
 		return &mBoost;
@@ -56,5 +68,26 @@ namespace Nobody
 	}
 	float* Player::getUpLimitLife() {
 		return &upLimitLife;
+	}
+	void Player::SetCrit_rate(float rate) {
+		Crit_rate = rate;
+	}
+	float* Player::GetCrit_rate() {
+		return &Crit_rate;
+	}
+	void Player::SetCrit_damage(float damage) {
+		Crit_damage = damage;
+	}
+	float* Player::GetCrit_damage() {
+		return &Crit_damage;
+	}
+	void Player::SetDamage_rate(float rate) {
+		Damage_rate = rate;
+	}
+	float* Player::GetDamage_rate() {
+		return &Damage_rate;
+	}
+	float* Player::GetNeededExp() {
+		return &neededExp;
 	}
 }

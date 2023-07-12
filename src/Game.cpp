@@ -403,6 +403,7 @@ namespace Nobody
 				[this](GameObject* enemy) { 
 					if (enemy->GetState() == GameObject::State::EDead) {
 						score++;  // 增加玩家的分数
+						mPlayer->SetExp(*mPlayer->GetExp() + 1);  // 增加玩家的经验值
 						return true;  // 删除这个敌人
 					}
 		return false;  // 不删除这个敌人
@@ -413,6 +414,7 @@ namespace Nobody
 		// 释放掉所有死亡区的物体
 		for (auto deadObject : deadObjects)
 		{
+			if (deadObject->isPlayer) continue;
 			delete deadObject;
 		}
 	}
@@ -450,6 +452,19 @@ namespace Nobody
 		SDL_RenderFillRect(mRenderer, &lifeBar);
 
 		RenderText(mRenderer, font, "ACCELERATE", textColor, textRect);
+
+		// 绘制蓝色Exp条
+		SDL_SetRenderDrawColor(mRenderer, 0, 0, 255, 0);
+		SDL_Rect expBarFrame = { scene_width - 50, scene_height - 300 - 50,50, 300 };
+		SDL_RenderDrawRect(mRenderer, &expBarFrame);
+		int expValue = static_cast<int>(300 * (static_cast<float>(*mPlayer->GetExp()) / static_cast<float>(*mPlayer->GetNeededExp())));
+		expValue = std::max(0, expValue);
+		SDL_Rect expBar = { scene_width - 50, scene_height - expValue - 50,50, expValue };
+		SDL_RenderFillRect(mRenderer, &expBar);
+
+		SDL_Rect expTextRect = { scene_width - 50, scene_height - 300 - 50 - 50,50, 50 };
+		RenderText(mRenderer, font, "Exp", textColor, expTextRect);
+		
 		// 将分数转换为字符串
 		std::string scoreText ="Score  " + std::to_string(score);
 
@@ -493,7 +508,10 @@ namespace Nobody
 				mIsDEAD = false;
 			}
 		}
+		if (mIsChoosingProps)
+		{
 
+		}
 		if (mIsPaused) {
 			// 显示Paused 在屏幕中央
 			SDL_Color color = { 0, 0, 0, 255 };  // 颜色
