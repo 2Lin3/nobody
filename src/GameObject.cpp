@@ -44,9 +44,12 @@ namespace Nobody
 		if (mState == State::EActive)
 		{
 			// 每帧执行，处理所有组件的输入逻辑
-			for (auto component : mComponents)
+			for (auto& component : mComponents)
 			{
-				component->ProcessInputMouse(mousex,mousey);
+				if (component == nullptr) {
+					continue; // skip this component
+				}
+				component->ProcessInputMouse(mousex, mousey);
 			}
 		}
 	}
@@ -56,8 +59,12 @@ namespace Nobody
 		if (mState == State::EActive)
 		{
 			// 每帧执行，处理所有组件的输入逻辑
-			for (auto component : mComponents)
+			for (auto& component : mComponents)
 			{
+				if (component == nullptr)
+				{
+					continue; // skip this component
+				}
 				component->ProcessInputMouseDown(state, mBoost);
 			}
 		}

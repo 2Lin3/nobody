@@ -29,7 +29,7 @@ namespace Nobody
 		float scaleFactorX = (2 * mCircleRadius * 10) / sprite->GetTexWidth();
 		float scaleFactorY = (2 * mCircleRadius * 10) / sprite->GetTexHeight();
 		SetScale(Vector2(scaleFactorX, scaleFactorY));
-		SetLife(10000);
+		SetLife(30);
 		//MoveComponent* moveComponent = new MoveComponent(this);
 		//moveComponent->SetDir(Vector2(mplayer->GetLinearVelocity().x, mplayer->GetLinearVelocity().y));
 	}
@@ -39,5 +39,22 @@ namespace Nobody
 	void Player::SetBoostValue(float newmBoost) {
 		mBoost = newmBoost;
 	}
-
+	float* Player::GetExp() {
+		return &mExp;
+	}
+	void Player::SetExp(float newmExp) {
+		mExp = newmExp;
+	}
+	int* Player::GetLevel() {
+		return &mLevel;
+	}
+	void Player::SetLevel(int newmLevel) {
+		mLevel = newmLevel;
+	}
+	void Player::SetUpLimitLife(float life) {
+		upLimitLife = life;
+	}
+	float* Player::getUpLimitLife() {
+		return &upLimitLife;
+	}
 }

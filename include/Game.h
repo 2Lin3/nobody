@@ -70,6 +70,8 @@ namespace Nobody
 		void RenderText(SDL_Renderer* renderer, TTF_Font* font, const std::string& text,
 			SDL_Color color, SDL_Rect& textRect);
 		void LimitUpBorder(GameObject* gameObject);
+		//!	player 噶了
+		void RenderDeathMessage();
 	private:
 		//!	处理事件
 		void	Event();
@@ -90,12 +92,12 @@ namespace Nobody
 		std::vector<GameObject*> mGameObjects;		//!<	游戏物体容器
 		std::vector<GameObject*> mPendingObjects;	//!<	等待状态的游戏物体容器
 		std::vector<SpriteComponent*> mSprites;		//!<	存放精灵的容器
-		std::vector<GameObject*> mEnemies;				//!<	存放敌人的容器
+		std::vector<GameObject*> mEnemies;			//!<	存放敌人的容器
 
 		std::mt19937 mRngEngine;					//!<	随机种子
 		bool leftMousePressed = false;
 		bool rightMousePressed = false;
-
+		bool mIsPaused = false;						//!<	是否暂停
 		std::unordered_map<std::string, SDL_Texture*> mTextures;	//!<	存放贴图的容器
 
 		SDL_Window* mWindow;		//!<	窗口
@@ -103,10 +105,13 @@ namespace Nobody
 		TTF_Font* font;				//!<	字体
 		SDL_Color textColor = { 255, 100, 0 };	//!<	字体颜色
 		SDL_Rect textRect = { 640, 750, 100, 50 };	//!<	加速字体框体位置
+		int mFadeAlpha = 0;				//死亡更新用透明度
 
 		SDL_Renderer* mRenderer;		//!<	渲染器
 		bool			mIsRunning;		//!<	运行状态
+		bool			mIsDEAD;		//!<	是否死亡
 		bool			mIsUpdating;	//!<	是否在更新状态
+		bool			mIsPauseMenuVisible = false;//!<		设置暂停菜单的显示标志
 
 		Player* mPlayer;		//!<	玩家角色
 		Boundary* mBoundary;		//!<	边界

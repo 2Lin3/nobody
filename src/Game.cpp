@@ -143,6 +143,7 @@ namespace Nobody
 					break;
 				case SDL_KEYDOWN:
 					gameStarted = true;
+					SDL_DestroyTexture(textTexture);//清理创建的纹理
 					mSpawnTimer = 0;//计时器归零
 					score = 0;  // 分数归零
 					break;
@@ -151,6 +152,22 @@ namespace Nobody
 			std::this_thread::sleep_for(std::chrono::milliseconds(3));
 		}
 	};
+
+	void Game::RenderDeathMessage()
+	{
+		SDL_Color color = { 0, 0, 0, 255 };  // 颜色
+		SDL_Surface* textSurface = TTF_RenderText_Solid(font, "snuff out", color);
+		SDL_Texture* textTexture = SDL_CreateTextureFromSurface(mRenderer, textSurface);
+		SDL_FreeSurface(textSurface);
+		SDL_Rect textRect;
+		SDL_QueryTexture(textTexture, NULL, NULL, &textRect.w, &textRect.h);
+		textRect.x = (scene_width - textRect.w) / 2;
+		textRect.y = (scene_height - textRect.h) / 2;
+
+		// 绘制噶掉文本
+		SDL_RenderCopy(mRenderer, textTexture, NULL, &textRect);
+	}
+
 
 	void Game::Loop()
 	{
@@ -278,6 +295,13 @@ namespace Nobody
 				if (event.button.button == SDL_BUTTON_LEFT) leftMousePressed = false;
 				if (event.button.button == SDL_BUTTON_RIGHT) rightMousePressed = false;
 				break;
+
+			case SDL_KEYDOWN:
+				if (event.key.keysym.sym == SDLK_ESCAPE)
+				{
+					mIsPaused = !mIsPaused;
+				}
+				break;
 			default:
 				break;
 			}
@@ -299,6 +323,11 @@ namespace Nobody
 	bool test = false;
 	void Game::Update()
 	{
+		// 如果游戏暂停，直接返回
+		if (mIsPaused)
+		{
+			return;
+		}
 		// 设置帧率
 		Tick(60);
 		//当前时间
@@ -333,11 +362,18 @@ namespace Nobody
 
 			}
 		}
-		// 更新结束
-		mIsUpdating = false;
+
+		if (mPlayer->GetLife() <= 0)
+		{	
+			mIsDEAD = true;
+		}
 
 		// 更新Box2D世界
 		mWorld->Step(timeStep, velocityIterations, positionIterations);
+
+		// 更新结束
+		mIsUpdating = false;
+
 
 		// 将所有等待区物体移动至正式的物体区
 		for (auto pendingObject : mPendingObjects)
@@ -390,7 +426,8 @@ namespace Nobody
 		SDL_RenderClear(mRenderer);
 		// 绘制调试图形
 		mWorld->DebugDraw();
-
+		// 恢复混合模式
+		SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_NONE);
 		// 绘制所有精灵
 		for (auto sprite : mSprites)
 		{
@@ -402,7 +439,9 @@ namespace Nobody
 		SDL_RenderDrawLine(mRenderer, 1230, 0, 1230, 800);
 		SDL_RenderDrawCircle(mRenderer, mPlayer->GetPosition().x, mPlayer->GetPosition().y,20);
 		//绘制加速气槽
-		SDL_Rect boostBar = { 225, scene_height-50, static_cast<int>(scene_width/1.5 * (static_cast<float>(*mPlayer->GetBoostValue()) / static_cast<float>(100))), 50 };
+		int boostValue = static_cast<int>(scene_width / 1.5 * (static_cast<float>(*mPlayer->GetBoostValue()) / static_cast<float>(100)));
+		boostValue = std::max(0, boostValue);
+		SDL_Rect boostBar = { 225, scene_height-50, boostValue, 50 };
 		SDL_RenderFillRect(mRenderer, &boostBar);
 
 		//绘制生命槽
@@ -429,6 +468,46 @@ namespace Nobody
 			//SDL_Rect enemyLife = { enemy->GetPosition().x - enemy->GetLife()/2, enemy->GetPosition().y - 30,enemy->GetLife(), 3  };
 			//SDL_RenderFillRect(mRenderer, &enemyLife);
 		}
+
+
+		if (mIsDEAD) {
+
+			// 显示死亡信息
+			RenderDeathMessage();
+			// 绘制一个透明度逐渐增加的黑色矩形来实现渐变效果
+
+			SDL_Rect rect = { 0, 0, scene_width, scene_height };
+			SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
+			SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, mFadeAlpha);  // 假设mFadeAlpha是当前的透明度
+			SDL_RenderFillRect(mRenderer, &rect);
+
+			// 透明度逐渐增加
+			mFadeAlpha += 255 / (3.5f * 60);  // 假设每秒60帧
+
+			// 渐变结束，重启游戏
+			if (mFadeAlpha >= 255)
+			{
+				mFadeAlpha = 0;
+				// 重启游戏
+				ResetGame();
+				mIsDEAD = false;
+			}
+		}
+
+		if (mIsPaused) {
+			// 显示Paused 在屏幕中央
+			SDL_Color color = { 0, 0, 0, 255 };  // 颜色
+			SDL_Surface* textSurface = TTF_RenderText_Solid(font, "Paused", color);
+			SDL_Texture* textTexture = SDL_CreateTextureFromSurface(mRenderer, textSurface);
+			SDL_FreeSurface(textSurface);
+			SDL_Rect textRect;
+			SDL_QueryTexture(textTexture, NULL, NULL, &textRect.w, &textRect.h);
+			textRect.x = (scene_width - textRect.w) / 2;
+			textRect.y = (scene_height - textRect.h) / 2;
+
+			// 绘制噶掉文本
+			SDL_RenderCopy(mRenderer, textTexture, NULL, &textRect);
+		}
 		// 交换缓冲区
 		SDL_RenderPresent(mRenderer);
 	}
@@ -441,10 +520,13 @@ namespace Nobody
 		LoadTexture("sprites/chrA07.png", "BossPawn");
 		LoadTexture("sprites/background_image.png", "background");
 		// 创建背景
+		if (mBackground) delete mBackground;
 		mBackground = new Background(this, mWorld);
-		
-		mPlayer = new Player(this,mWorld);
 
+		if (mPlayer) delete mPlayer;
+		mPlayer = new Player(this, mWorld);
+
+		if (mBoundary) delete mBoundary;
 		mBoundary = new Boundary(this, mWorld);
 		//for (int i = 1; i < 3; i++) {
 		//Vector2 randomPosition = GenRandomPosition(Vector2(600, 100));
@@ -473,11 +555,23 @@ namespace Nobody
 
 	void Game::UnloadData()
 	{
+		// 释放所有敌人
+		while (!mEnemies.empty())
+		{
+			delete mEnemies.back();
+			mEnemies.pop_back();  // 从容器中移除这个元素
+		}
+
 		// 释放所有游戏物体
 		while (!mGameObjects.empty())
 		{
 			delete mGameObjects.back();
 		}
+		mGameObjects.clear();
+		// 释放指针
+		mBackground = nullptr;
+		mPlayer = nullptr;
+		mBoundary = nullptr;
 
 		// 释放所有贴图资源
 		for (auto tex : mTextures)

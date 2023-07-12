@@ -25,6 +25,9 @@ namespace Nobody
 
 	void InputComponent::ProcessInputMouse(float mousex, float mousey) {
 		RigidComponent* mcc = mGameObject->GetComponent<RigidComponent>();
+		if (mcc == nullptr) {
+			return;
+		}
 		float MaxChange = 20;
 
 		last_mouse_x = scene_width/2;
@@ -43,6 +46,9 @@ namespace Nobody
 	void InputComponent::ProcessInputMouseDown(int state, float* Boost)
 	{
 		RigidComponent* mcc = mGameObject->GetComponent<RigidComponent>();
+		if (mcc == nullptr) {
+			return;
+		}
 		// Define boost variables
 		static const float kMaxBoost = 100.0f;
 		static const float kBoostDecrease = 10.0f;	

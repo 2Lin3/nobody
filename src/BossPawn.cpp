@@ -219,7 +219,7 @@ namespace Nobody
         // 在原有的行为基础上添加斥力
         Vector2 totalForceDirection = forceDirection * forceMagnitude + avoidanceForce;
         //if (forceDirection.x != totalForceDirection.Normalized().x) std::cout << "有" << std::endl;
-        // 归一化总的力的方向，这样它的大小不会影响物体的速度
+        // 归一化总的力的方向，这样大小不会影响物体的速度
         forceDirection = totalForceDirection.Normalized();
 
     }
@@ -281,6 +281,7 @@ namespace Nobody
             currentAngleDegrees = currentAngle * 180.0 / M_PI;
 
         }
+        //视野调试
         //SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // 设置为绿色
         //DrawSector(renderer, GetPosition().x, GetPosition().y, 5 * SCALE * radius,
         //    currentAngleDegrees +135,
