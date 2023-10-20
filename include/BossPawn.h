@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #ifndef __Nobody_BossPawn__
 #define __Nobody_BossPawn__
 
@@ -11,13 +11,13 @@ namespace Nobody
 	public:
 		enum class BossPawnType { Player, AI };
 		enum class BossPawnState {
-			Lurking, // ËÅ»ú´ı·¢
-			Attacking, // ½ø¹¥
-			Escaping, // ÌÓÍö
-			Deceiving, // ¹î¼Æ
-			Resting // ĞİÏ¢
+			Lurking, // ä¼ºæœºå¾…å‘
+			Attacking, // è¿›æ”»
+			Escaping, // é€ƒäº¡
+			Deceiving, // è¯¡è®¡
+			Resting // ä¼‘æ¯
 		};
-		//! ¹¹Ôìº¯Êı
+		//! æ„é€ å‡½æ•°
 		BossPawn(class Game* game, b2World* world, const Vector2& GeneratePos, const std::vector<GameObject*>& enemies, BossPawnType type = BossPawnType::AI);
 
 		bool isValidPosition(float x, float y, const Vector2& GeneratePos);
@@ -44,30 +44,30 @@ namespace Nobody
 		}
 
 	private:
-		BossPawnState mState;// µ±Ç°×´Ì¬
+		BossPawnState mState;// å½“å‰çŠ¶æ€
 		std::vector<GameObject*>enemies;
 		int currentAngleDegrees = 0;
 		void UpdateAI();
 		void AttackTarget(int Case, Vector2 pos);
-		float mSpeed = 150.0f; // BossPawnÒÆ¶¯ËÙ¶È
-		float mDetectionRange = 300.0f; // ¼ì²âÍæ¼ÒµÄ·¶Î§
-		float mCurrentTime = 0.0f; // µ±Ç°Ê±¼ä£¨´ÓÓÎÏ·¿ªÊ¼ËãÆğ£©
-		float mLastChargeTime = -5.0f; // ÉÏ´Î³å×²µÄÊ±¼ä
-		float mScreenBottom = 750; // ÆÁÄ»µ×²¿µÄy×ø±ê
+		float mSpeed = 150.0f; // BossPawnç§»åŠ¨é€Ÿåº¦
+		float mDetectionRange = 300.0f;  // æ£€æµ‹ç©å®¶çš„èŒƒå›´
+		float mCurrentTime = 0.0f; // å½“å‰æ—¶é—´ï¼ˆä»æ¸¸æˆå¼€å§‹ç®—èµ·ï¼‰
+		float mLastChargeTime = -5.0f; // ä¸Šæ¬¡å†²æ’çš„æ—¶é—´
+		float mScreenBottom = 750; // å±å¹•åº•éƒ¨çš„yåæ ‡
 		BossPawnType mType;
 		float radius = 3.0f;
 		float mSmallForceMagnitude = 1000;
 		float mLargeForceMagnitude = 30000;
-		float mLastPlayerChargeTime; // ÉÏ´Î³å×²Íæ¼ÒµÄÊ±¼ä
-		float mLastBottomChargeTime; // ÉÏ´Î³å×²µ×²¿µÄÊ±¼ä
-		float mLastDownForceTime; // ÉÏ´ÎÏòÏÂÊ©¼ÓÁ¦µÄÊ±¼ä;
+		float mLastPlayerChargeTime; // ä¸Šæ¬¡å†²æ’ç©å®¶çš„æ—¶é—´
+		float mLastBottomChargeTime; // ä¸Šæ¬¡å†²æ’åº•éƒ¨çš„æ—¶é—´
+		float mLastDownForceTime; // ä¸Šæ¬¡å‘ä¸‹æ–½åŠ åŠ›çš„æ—¶é—´
 		bool Charging = false;
-		int AttactCase = 0;//Åö×²Çé¿ö
+		int AttactCase = 0;//ç¢°æ’æƒ…å†µ
 		float leftime = 0;
-		float timeWidth = 0.4;//ĞîÁ¦¶¯»­Ê±³¤
+		float timeWidth = 0.4;//è“„åŠ›åŠ¨ç”»æ—¶é•¿
 		float dampv = 0.4;
-		float cooltime = 3.0f;//³å»÷CD
-		Vector2 forceDirection = Vector2::Zero; // ÉèÖÃÊ©¼ÓÁ¦µÄ·½Ïò
+		float cooltime = 3.0f;//å†²å‡»CD
+		Vector2 forceDirection = Vector2::Zero; // è®¾ç½®æ–½åŠ åŠ›çš„æ–¹å‘
 		float forceMagnitude = 0.0f;
 		b2Body* mpawn;
 	};

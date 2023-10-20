@@ -1,4 +1,4 @@
-#include "Item.h"
+ï»¿#include "Item.h"
 
 namespace Nobody
 {
@@ -7,23 +7,41 @@ namespace Nobody
 
         switch (type) {
         case BoostType::Accelerate_Capacity_BOOST:
-            this->value = 10.0; // Éè¶¨ËÙ¶ÈÌáÉıµÄÊıÖµ
+            this->value = 10.0; // æ‰¢éš…å’åƒ…æ‘æ±”è…”æ…ç¡‰
             break;
         case BoostType::MAX_HEALTH_BOOST:
-            this->value = 20.0; // Éè¶¨×î´óÉúÃüÖµÌáÉıµÄÊıÖµ
+            this->value = 20.0; // æ‰¢éš…éƒ”æ¹®æ±œéŸœç¡‰æ‘æ±”è…”æ…ç¡‰
             break;
         case BoostType::ATTACK_BOOST:
-            this->value = 0.1; // Éè¶¨¹¥»÷Á¦ÌáÉıµÄÊıÖµ
+            this->value = 0.1; // æ‰¢éš…é¦´åƒ»è–¯æ‘æ±”è…”æ…ç¡‰
             break;
         case BoostType::CRITICAL_HIT_CHANCE_BOOST:
-            this->value = 0.1; // Éè¶¨±©»÷¼¸ÂÊÌáÉıµÄÊıÖµ
+            this->value = 0.1; // æ‰¢éš…æƒŸåƒ»æ’“è–¹æ‘æ±”è…”æ…ç¡‰
             break;
         case BoostType::CRITICAL_HIT_DAMAGE_BOOST:
-            this->value = 0.3; // Éè¶¨±©»÷ÉËº¦ÌáÉıµÄÊıÖµ
+            this->value = 0.3; // æ‰¢éš…æƒŸåƒ»å¤¼æ¼²æ‘æ±”è…”æ…ç¡‰
             break;
         default:
             break;
         }
+    }
+
+    std::string Item::getName() const{
+        switch (type) {
+        case BoostType::Accelerate_Capacity_BOOST:
+            return "Accelerate Capacity Boost";
+        case BoostType::MAX_HEALTH_BOOST:
+            return "Max Health Boost";
+        case BoostType::ATTACK_BOOST:
+			return "Attack Boost";
+        case BoostType::CRITICAL_HIT_CHANCE_BOOST:
+			return "Critical Hit Chance Boost";
+        case BoostType::CRITICAL_HIT_DAMAGE_BOOST:
+            return "Critical Hit Damage Boost";
+        default:
+            return "Unknown Item";
+        }
+
     }
 
 

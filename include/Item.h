@@ -22,6 +22,7 @@ namespace Nobody
         Item(BoostType type);
         BoostType GetType() const;
         void ApplyToPlayer(Player& player);
+        std::string getName() const;
 
     private:
         BoostType type;

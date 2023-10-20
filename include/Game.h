@@ -77,6 +77,7 @@ namespace Nobody
 		//!	player 噶了
 		void RenderDeathMessage();
 		bool			mIsChoosingProps = false;//!<		设置选择道具的显示标志
+		bool			mIsDrawingChoosingProps = false;//!< 设置选择道具的绘制标志
 	private:
 		//!	处理事件
 		void	Event();
@@ -99,6 +100,8 @@ namespace Nobody
 		std::vector<SpriteComponent*> mSprites;		//!<	存放精灵的容器
 		std::vector<GameObject*> mEnemies;			//!<	存放敌人的容器
 		std::vector<Item> items;					//!<	存放道具的容器
+		std::vector<Item> selectedItems;			//!<	存放已选道具的容器
+		SDL_Rect itemRects[3];						//!<	道具框体位置
 
 		std::mt19937 mRngEngine;					//!<	随机种子
 		bool leftMousePressed = false;
@@ -112,6 +115,9 @@ namespace Nobody
 		SDL_Color textColor = { 255, 100, 0 };	//!<	字体颜色
 		SDL_Rect textRect = { 640, 750, 100, 50 };	//!<	加速字体框体位置
 		int mFadeAlpha = 0;				//死亡更新用透明度
+		bool mIsHovered[3] = { false, false, false };		// 一个布尔数组，表示每个卡片是否被鼠标悬停
+		bool mIsClicked[3] = { false, false, false };		// 一个布尔数组，表示每个卡片是否被鼠标点击
+
 
 		SDL_Renderer* mRenderer;		//!<	渲染器
 		bool			mIsRunning;		//!<	运行状态
@@ -140,6 +146,11 @@ namespace Nobody
 		int score;  // 分数
 		SDL_Rect scoreTextRect = { 1000, 20, 100, 50 };
 		SDL_Color scoreColor = { 255, 255, 255 };
+
+		// 定义颜色
+		SDL_Color grayColor = { 100, 100, 100, 255 };
+		SDL_Color whiteColor = { 255, 255, 255, 255 };
+		SDL_Color blackColor = { 0, 0, 0, 255 };
 	};
 }
 

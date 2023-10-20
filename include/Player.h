@@ -37,7 +37,7 @@ namespace Nobody
 		float Crit_rate = 0.1;
 		float Crit_damage = 1.5;
 		float Damage_rate = 0.5;
-		float neededExp = 10;
+		float neededExp = 1;
 	};
 }
 

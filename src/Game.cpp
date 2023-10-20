@@ -1,4 +1,4 @@
-//! @file Game.cpp
+ï»¿//! @file Game.cpp
 
 #include	<SDL.h>
 #include	<SDL_image.h>
@@ -38,14 +38,14 @@ namespace Nobody
 
 	bool Game::Initialize()
 	{
-		// SDL¿â³õÊ¼»¯
+		// SDLè¸±å ´å®è¶™
 		if (SDL_Init(SDL_INIT_VIDEO) != 0)
 		{	
 			SDL_Log("Failed to initialize SDL: %s", SDL_GetError());
 			return false;
 		}
 
-		// ´°¿Ú³õÊ¼»¯
+		// æ•¦è«³å ´å®è¶™
 		mWindow = SDL_CreateWindow("Nobody", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, scene_width, scene_height, 0);
 		if (!mWindow)
 		{
@@ -53,7 +53,7 @@ namespace Nobody
 			return false;
 		}
 
-		// äÖÈ¾Æ÷³õÊ¼»¯
+		// é¦ºï ˆïœ‡å ´å®è¶™
 		mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED);
 		if (!mRenderer)
 		{
@@ -61,27 +61,27 @@ namespace Nobody
 			return false;
 		}
 
-		// ³õÊ¼»¯SDL_image¿â
+		// å ´å®è¶™SDL_imageè¸±
 		if (!IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG))
 		{
 			SDL_Log("Failed to initialize SDL_image: %s", SDL_GetError());
 			return false;
 		}
 
-		//³õÊ¼»¯×Ö¿â
+		//å ´å®è¶™è¶¼è¸±
 		if (TTF_Init() == -1) {
 			printf("TTF_Init: % s\n", TTF_GetError()); 
 			return false;
 		}
 
-		// ½¨Á¢box2dÊÀ½ç
+		// è†˜è•¾box2då²è³œ
 		mWorld = new b2World(b2Vec2(0.0f, 0.0f));
 		if (!mWorld) {
 			SDL_Log("Failed to create mWorld");
 			return false;
 		}
 		
-		// ³õÊ¼»¯µÀ¾ßÁĞ±í
+		// å ´å®è¶™è€‹æ’¿è¹ˆæ¡¶
 		try
 		{
 			for (int i = 0; i < static_cast<int>(BoostType::End); ++i) {
@@ -94,38 +94,38 @@ namespace Nobody
 			return false;
 		}
 
-		//// ´´½¨OpenGL
+		//// æ–è†˜OpenGL
 		//SDL_GLContext context = SDL_GL_CreateContext(mWindow);
 		//if (!context) {
 		//	SDL_Log("Failed to create OpenGL");
 		//	return false;
 		//}
 
-		// ÉèÖÃÊó±êµÄÏà¶ÔÄ£Ê½
-		// ÔÚÏà¶ÔÄ£Ê½ÏÂ£¬Êó±êµÄÎ»ÖÃÊÇÏà¶ÔÓÚÉÏÒ»´ÎµÄÎ»ÖÃµÄÆ«ÒÆÁ¿
-		// ÕâÒâÎ¶×ÅÊó±ê²»»á³öÏÖÔÚÆÁÄ»ÉÏ£¬Ò²ÎŞ·¨ÒÆ¶¯³ö´°¿Ú
+		// æ‰¢ç¦»æ‰·æ¢“è…”çœˆå‹¤è€€å®’
+		// å©“çœˆå‹¤è€€å®’ç‹Ÿã„›æ‰·æ¢“è…”å¼‡ç¦»å²†çœˆå‹¤è¡¾å¥»ç¨æ£’è…”å¼‡ç¦»è…”ïš»ç—„è¬›
+		// æ¶´ç ©åº¤è¦‚æ‰·æ¢“ç¥¥é —å ¤ç‹å©“ï›‘èº‰å¥»ã„›ç©æ‹¸æ¥Šç—„é›„å ¤æ•¦è«³
 		SDL_SetRelativeMouseMode(SDL_TRUE);
-		// ¼ÓÔØOTF×ÖÌåÎÄ¼ş
+		// æ¨“å©¥OTFè¶¼ææ…ç’ƒ
 		font = TTF_OpenFont("SDL2_ttf-2.20.2/Mantinia.otf", 50);
-		// »ñÈ¡´°¿Ú±íÃæ
+		// é³³ïŸ«æ•¦è«³æ¡¶é†±
 		SDL_Surface* windowSurface = SDL_GetWindowSurface(mWindow);
-		// ÉèÖÃÅö×²¼àÌıÆ÷
+		// æ‰¢ç¦»ç™²è¢‰æ½¼æ³­ïœ‡
 		Collision* contactListener = new Collision();
 		mWorld->SetContactListener(contactListener);
 		
-		//Ëæ»úÖÖ×Ó³õÊ¼»¯
+		//å‘´å„‚ç¬±èµ½å ´å®è¶™
 		std::random_device rd;
 		mRngEngine = std::mt19937(rd());
 
-		// ¼ÓÔØÊı¾İ
+		// æ¨“å©¥æ…æ“‚
 		LoadData();
-		// ¿ªÊ¼µÈ´ıÍæ¼Ò°´ÏÂÈÎÒâ¼ü
+		// ç¾²å®è„¹æ¸¾ä¿™æ¨¡åŒç‹Ÿï ˜ç ©ç‘©
 		StartWaiting();
 		return true;
 	}
 
 	void Game::StartWaiting() {
-		// äÖÈ¾¿ªÊ¼ÎÄ±¾
+		// é¦ºï ˆç¾²å®æ…æ›
 		SDL_Color textColor = { 255, 255, 255, 255 };
 		SDL_Surface* textSurface = TTF_RenderText_Solid(font, "Press any key to start", textColor);
 		SDL_Texture* textTexture = SDL_CreateTextureFromSurface(mRenderer, textSurface);
@@ -136,12 +136,12 @@ namespace Nobody
 		textRect.x = (scene_width - textRect.w) / 2;
 		textRect.y = (scene_height - textRect.h) / 2;
 
-		// »æÖÆ¿ªÊ¼ÎÄ±¾
+		// é¤…ç§¶ç¾²å®æ…æ›
 		SDL_RenderClear(mRenderer);
 		SDL_RenderCopy(mRenderer, textTexture, NULL, &textRect);
 		SDL_RenderPresent(mRenderer);
 
-		// µÈ´ıÓÃ»§°´ÏÂÈÎÒâ¼ü
+		// è„¹æ¸¾èššèª§åŒç‹Ÿï ˜ç ©ç‘©
 		bool gameStarted = false;
 		while (!gameStarted)
 		{
@@ -156,9 +156,9 @@ namespace Nobody
 					break;
 				case SDL_KEYDOWN:
 					gameStarted = true;
-					SDL_DestroyTexture(textTexture);//ÇåÀí´´½¨µÄÎÆÀí
-					mSpawnTimer = 0;//¼ÆÊ±Æ÷¹éÁã
-					score = 0;  // ·ÖÊı¹éÁã
+					SDL_DestroyTexture(textTexture);//ï’ç‡´æ–è†˜è…”æ‡ç‡´
+					mSpawnTimer = 0;//æ•¸å¥€ïœ‡å¯¥éŒ¨
+					score = 0;  // ç…¦æ…å¯¥éŒ¨
 					break;
 				}
 			}
@@ -168,7 +168,7 @@ namespace Nobody
 
 	void Game::RenderDeathMessage()
 	{
-		SDL_Color color = { 0, 0, 0, 255 };  // ÑÕÉ«
+		SDL_Color color = { 0, 0, 0, 255 };  // æ™‡ä¼
 		SDL_Surface* textSurface = TTF_RenderText_Solid(font, "snuff out", color);
 		SDL_Texture* textTexture = SDL_CreateTextureFromSurface(mRenderer, textSurface);
 		SDL_FreeSurface(textSurface);
@@ -177,7 +177,7 @@ namespace Nobody
 		textRect.x = (scene_width - textRect.w) / 2;
 		textRect.y = (scene_height - textRect.h) / 2;
 
-		// »æÖÆ¸ÁµôÎÄ±¾
+		// é¤…ç§¶èœ‚è£æ…æ›
 		SDL_RenderCopy(mRenderer, textTexture, NULL, &textRect);
 	}
 
@@ -215,7 +215,7 @@ namespace Nobody
 
 	void Game::CreateGameObject(GameObject* gameObject)
 	{
-		// Èç¹ûµ±Ç°ÕıÔÚ¸üĞÂ£¬½«¸Ã¶ÔÏó¼ÓÈëµÈ´ıÇø
+		// ï ±å½†çµïæ·å©“è¼‰é™”ã„›è”šèœ†å‹¤ç “æ¨“ï µè„¹æ¸¾ï¥
 		if (mIsUpdating)
 		{
 			mPendingObjects.push_back(gameObject);
@@ -228,20 +228,20 @@ namespace Nobody
 
 	void Game::RemoveGameObject(GameObject* gameObject)
 	{
-		// ÏÈÔÚµÈ´ıÇøÖĞÑ°ÕÒ²¢ÒÆ³ıÎïÌå
+		// ç‚å©“è„¹æ¸¾ï¥ç¬¢æ‰†æ¢‘ç”œç—„å£ºæ˜œæ
 		auto iter = std::find(mPendingObjects.begin(), mPendingObjects.end(), gameObject);
 		if (iter != mPendingObjects.end())
 		{
-			// ½»»»ºóÉ¾³ıÄ©Î²£¬Ğ§ÂÊ¸ßÓÚerase£¬µ«»áÆÆ»µË³Ğò
+			// è é™ç¶´åˆ‰å£ºè—ºå¸£ã„›è™´è–¹è©¢è¡¾eraseã„›ç­é —ï›–è¼“ä½¼å”—
 			std::iter_swap(iter, mPendingObjects.end() - 1);
 			mPendingObjects.pop_back();
 		}
 
-		// ÔÚÕıÊ½ÎïÌåÇøÖĞÑ°ÕÒ²¢ÒÆ³ıÎïÌå
+		// å©“æ·å®’æ˜œæï¥ç¬¢æ‰†æ¢‘ç”œç—„å£ºæ˜œæ
 		iter = std::find(mGameObjects.begin(), mGameObjects.end(), gameObject);
 		if (iter != mGameObjects.end())
 		{
-			// ½»»»ºóÉ¾³ıÄ©Î²£¬Ğ§ÂÊ¸ßÓÚerase£¬µ«»áÆÆ»µË³Ğò
+			// è é™ç¶´åˆ‰å£ºè—ºå¸£ã„›è™´è–¹è©¢è¡¾eraseã„›ç­é —ï›–è¼“ä½¼å”—
 			std::iter_swap(iter, mGameObjects.end() - 1);
 			mGameObjects.pop_back();
 		}
@@ -250,7 +250,7 @@ namespace Nobody
 	void Game::CreateSprite(SpriteComponent* sprite)
 	{
 		int order = sprite->GetDrawOrder();
-		// °´ÕÕ»æÖÆË³Ğò²åÈë
+		// åŒæ¡½é¤…ç§¶ä½¼å”—è„£ï µ
 		auto iter = mSprites.begin();
 		for (; iter != mSprites.end(); ++iter)
 		{
@@ -281,12 +281,12 @@ namespace Nobody
 	void Game::Event()
 	{
 		SDL_Event event;
-		// Èç¹ûÊÂ¼ş¶ÓÁĞÖĞÓĞÎ´´¦ÀíµÄÊÂ¼ş£¬°´Ë³Ğò´¦Àí
+		// ï ±å½†å²ˆç’ƒå‹¦è¹ˆç¬¢è¡„å¸¤æ­ç‡´è…”å²ˆç’ƒã„›åŒä½¼å”—æ­ç‡´
 		while (SDL_PollEvent(&event))
 		{
 			switch (event.type)
 			{
-				// ÍË³öÊÂ¼ş£¬°´ÏÂ´°¿ÚµÄ²æ
+				// è±–å ¤å²ˆç’ƒã„›åŒç‹Ÿæ•¦è«³è…”è„«
 			case SDL_QUIT:
 				mIsRunning = false;
 				break;
@@ -294,15 +294,38 @@ namespace Nobody
 			{
 				float mouse_x = event.motion.x;
 				float mouse_y = event.motion.y;
+
 				mIsUpdating = true;
 				mPlayer->ProcessInputMouse(mouse_x, mouse_y);
 				mIsUpdating = false;
-				SDL_WarpMouseInWindow(mWindow, scene_width / 2, scene_height / 2);
+				if (!mIsDrawingChoosingProps) {
+					SDL_WarpMouseInWindow(mWindow, scene_width / 2, scene_height / 2);
+				}
+				else
+				{
+					SDL_Point mMousePos = { event.motion.x, event.motion.y };
+					// è¼‰é™”è—©è·ºç¸ïš¼è…”å”‘ç¤¿è¢¨æ€“
+					for (int i = 0; i < 3; ++i) {
+						mIsHovered[i] = SDL_PointInRect(&mMousePos, &itemRects[i]);
+					}
+				}
+
 				break;
 			}
 			case SDL_MOUSEBUTTONDOWN:
-				if (event.button.button == SDL_BUTTON_LEFT) leftMousePressed = true;
+				if (event.button.button == SDL_BUTTON_LEFT) {
+					leftMousePressed = true;
+					if (mIsDrawingChoosingProps) {
+						for (int i = 0; i < 3; ++i) {
+							selectedItems[i].ApplyToPlayer(*mPlayer);
+							mIsDrawingChoosingProps = false;
+							SDL_ShowCursor(SDL_DISABLE);
+							SDL_SetRelativeMouseMode(SDL_TRUE);
+						}
+					}
+				}
 				if (event.button.button == SDL_BUTTON_RIGHT) rightMousePressed = true;
+
 				break;
 			case SDL_MOUSEBUTTONUP:
 				if (event.button.button == SDL_BUTTON_LEFT) leftMousePressed = false;
@@ -320,10 +343,10 @@ namespace Nobody
 			}
 		}
 
-		// »ñÈ¡¼üÅÌÊäÈë×´Ì¬
+		// é³³ïŸ«ç‘©æ”«æ€€ï µè¢¨æ€“
 		const uint8_t* keyState = SDL_GetKeyboardState(NULL);
 
-		// ´¦ÀíËùÓĞÎïÌåµÄÊäÈëÂß¼­
+		// æ­ç‡´å€è¡„æ˜œæè…”æ€€ï µè»€æ†®
 		mIsUpdating = true;
 		for (auto gameObject : mGameObjects)
 		{
@@ -336,36 +359,38 @@ namespace Nobody
 	bool test = false;
 	void Game::Update()
 	{
-		// Èç¹ûÓÎÏ·ÔİÍ££¬Ö±½Ó·µ»Ø
-		if (mIsPaused)
-		{
-			return;
-		}
-		// ÉèÖÃÖ¡ÂÊ
+		// ï ±å½†èš”ç‰å©ƒç¤¿ã„›çœ»è«‰æ®¿éš™
+		if (mIsPaused) return;
+
+		// æ‰¢ç¦»ç—‹è–¹
 		Tick(60);
 		if (mIsChoosingProps) {
-			// È¡ÏûÊó±êµÄÏà¶ÔÄ£Ê½
+			// ïŸ«ç§æ‰·æ¢“è…”çœˆå‹¤è€€å®’
 			SDL_SetRelativeMouseMode(SDL_FALSE);
-			// ÏÔÊ¾Êó±ê
+			// ç†å°¨æ‰·æ¢“
 			SDL_ShowCursor(SDL_ENABLE);
 			std::shuffle(items.begin(), items.end(), mRngEngine);
-			std::vector<Item> selectedItems(items.begin(), items.begin() + 3);
-
-			////Òş²ØÊó±ê
+			selectedItems.assign(items.begin(), items.begin() + 3);
+			mIsDrawingChoosingProps = true;
+			mIsChoosingProps = false;
+			for (int i = 0; i < 3; ++i) {
+				mIsHovered[i] = false;
+			}
+			////ç¬ç´²æ‰·æ¢“
 			//SDL_ShowCursor(SDL_DISABLE);
-			//// ÉèÖÃÊó±êÎªÏà¶ÔÄ£Ê½
+			//// æ‰¢ç¦»æ‰·æ¢“å³ˆçœˆå‹¤è€€å®’
 			//SDL_SetRelativeMouseMode(SDL_TRUE);
-			return;
 		}
+		if (mIsDrawingChoosingProps) return;
 
-		//µ±Ç°Ê±¼ä
+		//çµïå¥€æ½”
 		Uint32 currentTime = SDL_GetTicks();
 		string currentTimeString = to_string(currentTime/1000);
 		//cout << currentTimeString << endl;
 
-		// ¸üĞÂ¿ªÊ¼
+		// è¼‰é™”ç¾²å®
 		mIsUpdating = true;
-		// ±éÀú²¢Ö´ĞĞËùÓĞÎïÌåµÄ¸üĞÂº¯Êı
+		// æ¢¢ç›ªç”œç¡’ä¿´å€è¡„æ˜œæè…”è¼‰é™”æ»²æ…
 		for (auto gameObject : mGameObjects)
 		{
 			gameObject->Update();
@@ -373,7 +398,7 @@ namespace Nobody
 		}
 		mSpawnTimer += Timer::deltaTime;
 		if (mSpawnTimer >= 3.0f) {
-			mSpawnTimer = 0.0f; // ÖØÖÃ¼ÆÊ±Æ÷
+			mSpawnTimer = 0.0f; // ç¬­ç¦»æ•¸å¥€ïœ‡
 			for (int i = 1; i < 2; i++) {
 				Vector2 randomPosition = GenRandomPosition(Vector2(600, -300));
 				//std::cout << randomPosition.x << randomPosition.y << endl;
@@ -396,25 +421,25 @@ namespace Nobody
 			mIsDEAD = true;
 		}
 
-		// ¸üĞÂBox2DÊÀ½ç
+		// è¼‰é™”Box2Då²è³œ
 		mWorld->Step(timeStep, velocityIterations, positionIterations);
 
-		// ¸üĞÂ½áÊø
+		// è¼‰é™”è³¦æ—°
 		mIsUpdating = false;
 
 
-		// ½«ËùÓĞµÈ´ıÇøÎïÌåÒÆ¶¯ÖÁÕıÊ½µÄÎïÌåÇø
+		// è”šå€è¡„è„¹æ¸¾ï¥æ˜œæç—„é›„ç¥«æ·å®’è…”æ˜œæï¥
 		for (auto pendingObject : mPendingObjects)
 		{
 			mGameObjects.emplace_back(pendingObject);
 		}
-		// Çå¿ÕµÈ´ıÇø
+		// ï’è«¾è„¹æ¸¾ï¥
 		mPendingObjects.clear();
 		if (leftMousePressed) mPlayer->ProcessInputMouseDown(SDL_BUTTON_LEFT, mPlayer->GetBoostValue());
 		if (rightMousePressed) mPlayer->ProcessInputMouseDown(SDL_BUTTON_RIGHT, mPlayer->GetBoostValue());
 		else mPlayer->ProcessInputMouseDown(SDL_BUTTON_MIDDLE, mPlayer->GetBoostValue());
 
-		// ½«ËùÓĞ×´Ì¬ÎªEDeadµÄÎïÌåÌí¼ÓÖÁËÀÍöÇø
+		// è”šå€è¡„è¢¨æ€“å³ˆEDeadè…”æ˜œææ°æ¨“ç¥«ä¾šå—ï¥
 		std::vector<GameObject*> deadObjects;
 		for (auto deadObject : mGameObjects)
 		{
@@ -423,23 +448,23 @@ namespace Nobody
 				deadObjects.emplace_back(deadObject);
 			}
 		}
-		// É¾³ıËùÓĞ×´Ì¬ÎªEDeadµÄµĞÈË
+		// åˆ‰å£ºå€è¡„è¢¨æ€“å³ˆEDeadè…”è©ï •
 		mEnemies.erase(
 			std::remove_if(
 				mEnemies.begin(),
 				mEnemies.end(),
 				[this](GameObject* enemy) { 
 					if (enemy->GetState() == GameObject::State::EDead) {
-						score++;  // Ôö¼ÓÍæ¼ÒµÄ·ÖÊı
-						mPlayer->SetExp(*mPlayer->GetExp() + 1);  // Ôö¼ÓÍæ¼ÒµÄ¾­ÑéÖµ
-						return true;  // É¾³ıÕâ¸öµĞÈË
+						score++;  // å´æ¨“ä¿™æ¨¡è…”ç…¦æ…
+						mPlayer->SetExp(*mPlayer->GetExp() + 1);  // å´æ¨“ä¿™æ¨¡è…”å†ªæ¡„ç¡‰
+						return true;  // åˆ‰å£ºæ¶´è·ºè©ï •
 					}
-		return false;  // ²»É¾³ıÕâ¸öµĞÈË
+		return false;  // ç¥¥åˆ‰å£ºæ¶´è·ºè©ï •
 				}
 			),
 			mEnemies.end()
 					);
-		// ÊÍ·ÅµôËùÓĞËÀÍöÇøµÄÎïÌå
+		// åº‹æº«è£å€è¡„ä¾šå—ï¥è…”æ˜œæ
 		for (auto deadObject : deadObjects)
 		{
 			if (deadObject->isPlayer) continue;
@@ -449,16 +474,16 @@ namespace Nobody
 
 	void Game::Draw()
 	{
-		// ÉèÖÃäÖÈ¾Æ÷ÑÕÉ«£¨À¶£©
+		// æ‰¢ç¦»é¦ºï ˆïœ‡æ™‡ä¼ã„—æ‡¦ã„˜
 		SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 255);
 
-		// Çå³ı»º³åÇø
+		// ï’å£ºé£å–³ï¥
 		SDL_RenderClear(mRenderer);
-		// »æÖÆµ÷ÊÔÍ¼ĞÎ
+		// é¤…ç§¶è¦ƒå½¸èŠå€›
 		mWorld->DebugDraw();
-		// »Ö¸´»ìºÏÄ£Ê½
+		// é–¥è‘©é«¦ç£è€€å®’
 		SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_NONE);
-		// »æÖÆËùÓĞ¾«Áé
+		// é¤…ç§¶å€è¡„å„•é¾
 		for (auto sprite : mSprites)
 		{
 			sprite->Draw(mRenderer);
@@ -468,20 +493,20 @@ namespace Nobody
 		SDL_RenderDrawLine(mRenderer, 50, 0, 50, 800);
 		SDL_RenderDrawLine(mRenderer, 1230, 0, 1230, 800);
 		SDL_RenderDrawCircle(mRenderer, mPlayer->GetPosition().x, mPlayer->GetPosition().y,20);
-		//»æÖÆ¼ÓËÙÆø²Û
+		//é¤…ç§¶æ¨“å’ïœˆç¾
 		int boostValue = static_cast<int>(scene_width / 1.5 * (static_cast<float>(*mPlayer->GetBoostValue()) / static_cast<float>(100)));
 		boostValue = std::max(0, boostValue);
 		SDL_Rect boostBar = { 225, scene_height-50, boostValue, 50 };
 		SDL_RenderFillRect(mRenderer, &boostBar);
 
-		//»æÖÆÉúÃü²Û
+		//é¤…ç§¶æ±œéŸœç¾
 		SDL_SetRenderDrawColor(mRenderer, 255, 0, 0, 0);
 		SDL_Rect lifeBar = { 0, scene_height- mPlayer->GetLife() * 3 - 50,50, mPlayer->GetLife()*3};
 		SDL_RenderFillRect(mRenderer, &lifeBar);
 
 		RenderText(mRenderer, font, "ACCELERATE", textColor, textRect);
 
-		// »æÖÆÀ¶É«ExpÌõ
+		// é¤…ç§¶æ‡¦ä¼Expæ²­
 		SDL_SetRenderDrawColor(mRenderer, 0, 0, 255, 0);
 		SDL_Rect expBarFrame = { scene_width - 50, scene_height - 300 - 50,50, 300 };
 		SDL_RenderDrawRect(mRenderer, &expBarFrame);
@@ -493,10 +518,10 @@ namespace Nobody
 		SDL_Rect expTextRect = { scene_width - 50, scene_height - 300 - 50 - 50,50, 50 };
 		RenderText(mRenderer, font, "Exp", textColor, expTextRect);
 		
-		// ½«·ÖÊı×ª»»Îª×Ö·û´®
+		// è”šç…¦æ…è›Œé™å³ˆè¶¼ç«æ¹
 		std::string scoreText ="Score  " + std::to_string(score);
 
-		// Ê¹ÓÃ RenderText º¯ÊıÔÚÖ¸¶¨µÄÎ»ÖÃÏÔÊ¾·ÖÊı
+		// å¦èšš RenderText æ»²æ…å©“ç¡Œéš…è…”å¼‡ç¦»ç†å°¨ç…¦æ…
 		RenderText(mRenderer, font, scoreText, scoreColor, scoreTextRect);
 
 		for (GameObject* enemy : mEnemies)
@@ -515,34 +540,80 @@ namespace Nobody
 
 		if (mIsDEAD) {
 
-			// ÏÔÊ¾ËÀÍöĞÅÏ¢
+			// ç†å°¨ä¾šå—é™“æ´˜
 			RenderDeathMessage();
-			// »æÖÆÒ»¸öÍ¸Ã÷¶ÈÖğ½¥Ôö¼ÓµÄºÚÉ«¾ØĞÎÀ´ÊµÏÖ½¥±äĞ§¹û
+			// é¤…ç§¶ç¨è·ºèŠµéš´åƒ…ç´¨è†å´æ¨“è…”çªªä¼æ’»å€›æ‡‚å¦—ç‹è†æ›¹è™´å½†
 
 			SDL_Rect rect = { 0, 0, scene_width, scene_height };
 			SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
-			SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, mFadeAlpha);  // ¼ÙÉèmFadeAlphaÊÇµ±Ç°µÄÍ¸Ã÷¶È
+			SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, mFadeAlpha);  // æ¨‘æ‰¢mFadeAlphaå²†çµïè…”èŠµéš´åƒ…
 			SDL_RenderFillRect(mRenderer, &rect);
 
-			// Í¸Ã÷¶ÈÖğ½¥Ôö¼Ó
-			mFadeAlpha += 255 / (3.5f * 60);  // ¼ÙÉèÃ¿Ãë60Ö¡
+			// èŠµéš´åƒ…ç´¨è†å´æ¨“
+			mFadeAlpha += 255 / (3.5f * 60);  // æ¨‘æ‰¢è—©éƒ60ç—‹
 
-			// ½¥±ä½áÊø£¬ÖØÆôÓÎÏ·
+			// è†æ›¹è³¦æ—°ã„›ç¬­ïœ„èš”ç‰
 			if (mFadeAlpha >= 255)
 			{
 				mFadeAlpha = 0;
-				// ÖØÆôÓÎÏ·
+				// ç¬­ïœ„èš”ç‰
 				ResetGame();
 				mIsDEAD = false;
 			}
 		}
-		if (mIsChoosingProps)
+		if (mIsDrawingChoosingProps)
 		{
 
+
+			int fontSize = 48;  // æ‰¢éš…æ–•è…”å ´å®è¶¼ææ¹®è‹¤
+			TTF_Font* fontTemp = TTF_OpenFont("SDL2_ttf-2.20.2/Mantinia.otf", fontSize);
+
+			for (int i = 0; i < 3; ++i) {
+				// å©“ï›‘èº‰ç¬¢æ é¤…ç§¶itemsè…”ç¸ïš¼å³ˆé–¡ä¼è…”æ–åŠ“
+				SDL_Rect itemRect = { (scene_width - 3 * 200 - 2 * 50) / 2 + (200 + 50) * i, (scene_height - 400) / 2, 200, 400 };
+				itemRects[i] = itemRect;
+				if (mIsHovered[i]) {
+					SDL_SetRenderDrawColor(mRenderer, blackColor.r, blackColor.g, blackColor.b, blackColor.a);
+				}
+				else {
+					SDL_SetRenderDrawColor(mRenderer, grayColor.r, grayColor.g, grayColor.b, grayColor.a);
+				}
+				SDL_RenderFillRect(mRenderer, &itemRect);
+
+				// è”šselectedItemsç¬¢è…”è€‹æ’¿å•ä¼é¡è¶¼ç†å°¨å©“ç¸ïš¼å¥»
+				SDL_Surface* textSurface = NULL;
+				SDL_Texture* textTexture = NULL;
+				SDL_Rect textRect;
+				do {
+					textSurface = TTF_RenderText_Solid(fontTemp, selectedItems[i].getName().c_str(), whiteColor);
+					textTexture = SDL_CreateTextureFromSurface(mRenderer, textSurface);
+					SDL_QueryTexture(textTexture, NULL, NULL, &textRect.w, &textRect.h);
+					if (textRect.w > itemRect.w || textRect.h > itemRect.h) {  // ï ±å½†æ…è¶¼å–œæ¸¡æ¹®è¡¾ç¸ïš¼
+						SDL_DestroyTexture(textTexture);  // ç§éšœçœ³ïè…”texture
+						SDL_FreeSurface(textSurface);  // åº‹æº«çœ³ïè…”surface
+						TTF_CloseFont(fontTemp);  // å£½æ••çœ³ïè…”è¶¼æ
+						fontSize--;  // è¶¼ææ¹®è‹¤ç†¬è‹¤
+						fontTemp = TTF_OpenFont("SDL2_ttf-2.20.2/Mantinia.otf", fontSize);  // ç¬­é™”æ¹–ç¾²è¶¼æ
+					}
+				} while (textRect.w > itemRect.w || textRect.h > itemRect.h);
+
+				textRect.x = (scene_width - 3 * 200 - 2 * 50) / 2 + 100 + (200 + 50) * i - textRect.w / 2;
+				textRect.y = (scene_height - 400) / 2 + 200 - textRect.h / 2;
+
+				// é¤…ç§¶è€‹æ’¿é¡è¶¼
+				SDL_RenderCopy(mRenderer, textTexture, NULL, &textRect);
+
+				// åº‹æº«è¨§åŸ­
+				SDL_DestroyTexture(textTexture);
+				SDL_FreeSurface(textSurface);
+							
+			}
+
+			TTF_CloseFont(fontTemp); // ç¥¥çŒå’­æš®å£½æ••æ–•è…”è¶¼æ
 		}
 		if (mIsPaused) {
-			// ÏÔÊ¾Paused ÔÚÆÁÄ»ÖĞÑë
-			SDL_Color color = { 0, 0, 0, 255 };  // ÑÕÉ«
+			// ç†å°¨Paused å©“ï›‘èº‰ç¬¢æ 
+			SDL_Color color = { 0, 0, 0, 255 };  // æ™‡ä¼
 			SDL_Surface* textSurface = TTF_RenderText_Solid(font, "Paused", color);
 			SDL_Texture* textTexture = SDL_CreateTextureFromSurface(mRenderer, textSurface);
 			SDL_FreeSurface(textSurface);
@@ -551,10 +622,10 @@ namespace Nobody
 			textRect.x = (scene_width - textRect.w) / 2;
 			textRect.y = (scene_height - textRect.h) / 2;
 
-			// »æÖÆ¸ÁµôÎÄ±¾
+			// é¤…ç§¶èœ‚è£æ…æ›
 			SDL_RenderCopy(mRenderer, textTexture, NULL, &textRect);
 		}
-		// ½»»»»º³åÇø
+		// è é™é£å–³ï¥
 		SDL_RenderPresent(mRenderer);
 	}
 
@@ -565,7 +636,7 @@ namespace Nobody
 
 		LoadTexture("sprites/chrA07.png", "BossPawn");
 		LoadTexture("sprites/background_image.png", "background");
-		// ´´½¨±³¾°
+		// æ–è†˜æ–åŠ“
 		if (mBackground) delete mBackground;
 		mBackground = new Background(this, mWorld);
 
@@ -585,41 +656,41 @@ namespace Nobody
 
 	void Game::Tick(int fps)
 	{
-		// ¸ù¾İÉèÖÃµÄÖ¡ÂÊ¼ÆËãÃ¿Ö¡ÖÁÉÙµÄÊ±¼ä
+		// è·¦æ“‚æ‰¢ç¦»è…”ç—‹è–¹æ•¸å‘¾è—©ç—‹ç¥«å±¾è…”å¥€æ½”
 		int fpsTime = 1000 / fps;
-		// Èç¹ûÉÏÒ»Ö¡½áÊøºó»¹Ã»ÓĞ´ïµ½ÒªÇóÊ±¼ä£¬ÔòµÈ´ı
+		// ï ±å½†å¥»ç¨ç—‹è³¦æ—°ç¶´éœç¾¶è¡„æ¹›å–„çŒï å¥€æ½”ã„›å¯€è„¹æ¸¾
 		while (!SDL_TICKS_PASSED(SDL_GetTicks(), Timer::ticksCount + fpsTime))
 		{
 			SDL_Delay(1);
 		}
 
-		// ¼ÆËãĞÂµÄÔöÁ¿Ê±¼ä+`	1
+		// æ•¸å‘¾é™”è…”å´è¬›å¥€æ½”+`	1
 		Timer::deltaTime = (SDL_GetTicks() - Timer::ticksCount) / 1000.0f;
-		// ¼ÆËãĞÂµÄÒ»Ö¡¿ªÊ¼Ê±Ëù¾­¹ıµÄ×ÜÊ±¼äS
+		// æ•¸å‘¾é™”è…”ç¨ç—‹ç¾²å®å¥€å€å†ªå¾¹è…”è»å¥€æ½”S
 		Timer::ticksCount = SDL_GetTicks();
 	}
 
 	void Game::UnloadData()
 	{
-		// ÊÍ·ÅËùÓĞµĞÈË
+		// åº‹æº«å€è¡„è©ï •
 		while (!mEnemies.empty())
 		{
 			delete mEnemies.back();
-			mEnemies.pop_back();  // ´ÓÈİÆ÷ÖĞÒÆ³ıÕâ¸öÔªËØ
+			mEnemies.pop_back();  // æ¤ï §ïœ‡ç¬¢ç—„å£ºæ¶´è·ºå•‹åŒ¼
 		}
 
-		// ÊÍ·ÅËùÓĞÓÎÏ·ÎïÌå
+		// åº‹æº«å€è¡„èš”ç‰æ˜œæ
 		while (!mGameObjects.empty())
 		{
 			delete mGameObjects.back();
 		}
 		mGameObjects.clear();
-		// ÊÍ·ÅÖ¸Õë
+		// åº‹æº«ç¡Œæ¸€
 		mBackground = nullptr;
 		mPlayer = nullptr;
 		mBoundary = nullptr;
 
-		// ÊÍ·ÅËùÓĞÌùÍ¼×ÊÔ´
+		// åº‹æº«å€è¡„æ³‚èŠè¨§åŸ­
 		for (auto tex : mTextures)
 		{
 			SDL_DestroyTexture(tex.second);
@@ -629,7 +700,7 @@ namespace Nobody
 
 	void Game::LoadTexture(const std::string& fileName, const std::string& newName)
 	{
-		// ÅĞ¶Ï¸ÃkeyÖµÊÇ·ñÒÑ±»Ê¹ÓÃ
+		// ç“šå‰¿èœ†keyç¡‰å²†ç˜çœ’æ©å¦èšš
 		auto iter = mTextures.find(newName);
 		if (iter != mTextures.end())
 		{
@@ -637,23 +708,23 @@ namespace Nobody
 			mTextures.erase(iter);
 		}
 
-		// ¶ÁÈ¡Í¼Æ¬´æÎªsurfaceĞÎÊ½
+		// é»ïŸ«èŠïš¼æ¹”å³ˆsurfaceå€›å®’
 		SDL_Surface* surf = IMG_Load(fileName.c_str());
 		if (!surf)
 		{
 			SDL_Log("Failed to load texture file %s", fileName.c_str());
 		}
 
-		// ½«surface×ª»»ÎªtextureĞÎÊ½
+		// è”šsurfaceè›Œé™å³ˆtextureå€›å®’
 		SDL_Texture* tex = SDL_CreateTextureFromSurface(mRenderer, surf);
-		// ÊÍ·ÅsurfaceµÄÄÚ´æ
+		// åº‹æº«surfaceè…”å›€æ¹”
 		SDL_FreeSurface(surf);
 		if (!tex)
 		{
 			SDL_Log("Failed to convert surface to texture for %s", fileName.c_str());
 		}
 
-		// ½«ÌùÍ¼¼ÓÈëµ½¹şÏ£±íÖĞ£¬²¢½«ĞÂÃû×Ö×÷ÎªkeyÖµ
+		// è”šæ³‚èŠæ¨“ï µå–„æ…‡æ´·æ¡¶ç¬¢ã„›ç”œè”šé™”é¡è¶¼é‡¬å³ˆkeyç¡‰
 		mTextures.emplace(newName, tex);
 	}
 	int Game::GetScreenWidth() {
@@ -674,15 +745,15 @@ namespace Nobody
 	}
 
 	Vector2 Game::GenRandomPosition(const Vector2& playerPos) {
-		// ¶¨ÒåxºÍy×ø±êµÄËæ»ú·¶Î§
+		// éš…ç ±xç¿yé‡´æ¢“è…”å‘´å„‚æ¯“å³“
 		std::uniform_real_distribution<float> distX(playerPos.x - 100, playerPos.x + 100);
 		std::uniform_real_distribution<float> distY(playerPos.y - 100, playerPos.y + 100);
 
-		// Éú³ÉËæ»úxºÍy×ø±ê
+		// æ±œå‚–å‘´å„‚xç¿yé‡´æ¢“
 		float randomX = distX(mRngEngine);
 		float randomY = distY(mRngEngine);
 
-		// ´´½¨Ò»¸öËæ»úÎ»ÖÃÏòÁ¿
+		// æ–è†˜ç¨è·ºå‘´å„‚å¼‡ç¦»ç ƒè¬›
 		Vector2 randomPosition(randomX, randomY);
 
 		return randomPosition;
