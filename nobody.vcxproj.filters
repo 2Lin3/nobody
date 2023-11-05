@@ -66,6 +66,15 @@
     <ClInclude Include="include\BossPawn.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\Item.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MeatPigeonPowerup.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AudioManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Component.cpp">
@@ -117,6 +126,12 @@
       <Filter>源</Filter>
     </ClCompile>
     <ClCompile Include="src\BossPawn.cpp">
+      <Filter>源</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Item.cpp">
+      <Filter>资源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AudioManager.cpp">
       <Filter>源</Filter>
     </ClCompile>
   </ItemGroup>

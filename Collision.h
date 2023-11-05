@@ -10,13 +10,16 @@
 #include	<box2d/box2d.h>
 #include    <GameObject.h>
 #include    <RigidComponent.h>
+#include    "AudioManager.h"
+
 namespace Nobody
 {
 	class Collision : public b2ContactListener 
 	{
+        AudioManager* mAudioManager;  // AudioManager 的指针
     public:
         void BeginContact(b2Contact* contact);
-
+        Collision(AudioManager* audioManager);
         void EndContact(b2Contact* contact);
 
     private:
@@ -26,6 +29,8 @@ namespace Nobody
         };
         std::vector<CollisionEvent> collisionEvents;
         b2Body* myBody;
+        const int scene_width = 1280;
+        const int scene_height = 800;	//!<	窗口规格
 	};
 }
 

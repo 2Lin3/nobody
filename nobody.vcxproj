@@ -116,7 +116,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;box2d.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2_mixer.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;box2d.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -137,6 +137,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="include\AudioManager.h" />
     <ClInclude Include="include\Background.h" />
     <ClInclude Include="include\BossPawn.h" />
     <ClInclude Include="include\Boundary.h" />
@@ -158,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="src\AudioManager.cpp" />
     <ClCompile Include="src\Background.cpp" />
     <ClCompile Include="src\BossPawn.cpp" />
     <ClCompile Include="src\Boundary.cpp" />

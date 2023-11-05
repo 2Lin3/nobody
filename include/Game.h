@@ -13,6 +13,7 @@
 #include	<random>
 #include	<Item.h>
 #include	"Pawn.h"
+#include	"AudioManager.h"
 //#include	<gl/GL.h>
 
 struct SDL_Window;
@@ -151,6 +152,10 @@ namespace Nobody
 		SDL_Color grayColor = { 100, 100, 100, 255 };
 		SDL_Color whiteColor = { 255, 255, 255, 255 };
 		SDL_Color blackColor = { 0, 0, 0, 255 };
+
+		//SDL …˘“Ù
+		AudioManager mAudioManager;
+		Mix_Music* bgMusic;
 	};
 }
 

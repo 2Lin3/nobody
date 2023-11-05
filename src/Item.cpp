@@ -7,19 +7,19 @@ namespace Nobody
 
         switch (type) {
         case BoostType::Accelerate_Capacity_BOOST:
-            this->value = 10.0; // 扢隅厒僅枑汔腔杅硉
+            this->value = 10.0; // 加速槽容量增加的数值
             break;
         case BoostType::MAX_HEALTH_BOOST:
-            this->value = 20.0; // 扢隅郔湮汜韜硉枑汔腔杅硉
+            this->value = 20.0; // 最大生命值增加的数值
             break;
         case BoostType::ATTACK_BOOST:
-            this->value = 0.1; // 扢隅馴僻薯枑汔腔杅硉
+            this->value = 0.1; // 攻击力增加的数值
             break;
         case BoostType::CRITICAL_HIT_CHANCE_BOOST:
-            this->value = 0.1; // 扢隅惟僻撓薹枑汔腔杅硉
+            this->value = 0.1; // 暴击率增加的数值
             break;
         case BoostType::CRITICAL_HIT_DAMAGE_BOOST:
-            this->value = 0.3; // 扢隅惟僻夼漲枑汔腔杅硉
+            this->value = 0.3; // 暴击伤害增加的数值
             break;
         default:
             break;

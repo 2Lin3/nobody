@@ -6,23 +6,20 @@
 #include<RigidComponent.h>
 #include<iostream>
 #include<Player.h>
+#include "AudioManager.h"
 namespace Nobody
 {
+    Collision::Collision(AudioManager* audioManager) : mAudioManager(audioManager) {}
     void Collision::BeginContact(b2Contact* contact) {
         // 获取碰撞事件中涉及的两个fixture的唯一标识符
         b2Fixture* fixtureA = contact->GetFixtureA();
         b2Fixture* fixtureB = contact->GetFixtureB();
-
         if (fixtureA == nullptr || fixtureB == nullptr) {
             return;
         }
-
         uintptr_t fixtureIdA = reinterpret_cast<uintptr_t>(fixtureA);
         uintptr_t fixtureIdB = reinterpret_cast<uintptr_t>(fixtureB);
-
-        // 输出碰撞信息
-        //std::cout << "Collision detected between fixture " << fixtureIdA << " and fixture " << fixtureIdB << std::endl;
-
+        
         // 将碰撞事件添加到数据结构中
         CollisionEvent event = { fixtureIdA, fixtureIdB };
         collisionEvents.push_back(event);
@@ -34,7 +31,33 @@ namespace Nobody
             if (fixtureA == nullptr || fixtureB == nullptr) {
                 continue;
             }
+            // 创建世界接触流形
+            b2WorldManifold worldManifold;
+            contact->GetWorldManifold(&worldManifold);
 
+            // 取第一个碰撞点
+            if (contact->GetManifold()->pointCount > 0) {
+                const b2Vec2& collisionPoint = worldManifold.points[0];
+                float x = collisionPoint.x; // 碰撞点的X坐标
+                float y = collisionPoint.y; // 碰撞点的Y坐标
+
+                // 计算声道平衡
+                Uint8 left, right;
+                // 假设listener的位置是屏幕中心，需要设置相应的x和y坐标 
+                float listenerX = scene_width / 2;  // 屏幕宽度的一半
+                float listenerY = scene_height / 2; // 屏幕高度的一半
+                AudioManager::Instance().CalculateStereoPan(x, y, listenerX, listenerY, left, right);
+
+                // 获得声音效果
+                Mix_Chunk* soundEffect = mAudioManager->GetRandomSoundEffect();
+                //soundEffect = AudioManager::Instance().LoadSoundEffect("music/Sound effects/2.wav");
+                // 设置声道的平衡
+                int channel = Mix_PlayChannel(-1, soundEffect, 0);
+                if (channel != -1) {
+                    Mix_SetPanning(channel, left, right);
+                }
+            }
+            
             GameObject* gameObjectA = reinterpret_cast<GameObject*>(fixtureA->GetBody()->GetUserData().pointer);
             GameObject* gameObjectB = reinterpret_cast<GameObject*>(fixtureB->GetBody()->GetUserData().pointer);
             bool AisPlayer = false;
@@ -70,7 +93,7 @@ namespace Nobody
                     damage = damageRate;
                 }
             }
-
+            //AudioManager::Instance().PlaySoundEffect(AudioManager::Instance().LoadSoundEffect("music/Sound effects/1.wav"), 0);
             if (fixtureA->GetBody()->GetLinearVelocity().Length() > fixtureB->GetBody()->GetLinearVelocity().Length() * 1.05) {
                 float minus = fixtureA->GetBody()->GetLinearVelocity().Length() - fixtureB->GetBody()->GetLinearVelocity().Length();
                 if(!AisPlayer) damage = 1;
