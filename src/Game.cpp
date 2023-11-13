@@ -394,7 +394,12 @@ namespace Nobody
 		Uint32 currentTime = SDL_GetTicks();
 		string currentTimeString = to_string(currentTime/1000);
 		//cout << currentTimeString << endl;
-
+		if (needUpdate) {
+			currentLevel++;
+			enemiesToSpawn = 6 + currentLevel * 4; 
+			enemiesDead = 0;
+			needUpdate = false;
+		}
 		// 更新开始 // English: Update start
 		mIsUpdating = true;
 		// 遍历并执行所有物体的更新函数 // English: Traverse and execute the update function of all objects
@@ -404,22 +409,20 @@ namespace Nobody
 			LimitUpBorder(gameObject);//upborder air wall
 		}
 		mSpawnTimer += Timer::deltaTime;
-		if (mSpawnTimer >= 3.0f) {
+		if (mSpawnTimer >= 6.0f && enemiesToSpawn) {
 			mSpawnTimer = 0.0f; // 重置计时器 // English: Reset timer
-			for (int i = 1; i < 2; i++) {
-				Vector2 randomPosition = GenRandomPosition(Vector2(600, -300));
-				//std::cout << randomPosition.x << randomPosition.y << endl;
-				testEnemy = new Pawn(this, mWorld, randomPosition);
-				mEnemies.push_back(testEnemy);
-				randomPosition = GenRandomPosition(Vector2(300, -300));
-				trickEnemy = new TrickPawn(this, mWorld, randomPosition);
-				mEnemies.push_back(trickEnemy);
-				if (!test) {
-					bossEnemy = new BossPawn(this, mWorld, Vector2(500, -500), mEnemies);
-					mEnemies.push_back(bossEnemy);
-					test = true;
-				}
-
+			Vector2 randomPosition = GenRandomPosition(Vector2(600, -300));
+			//std::cout << randomPosition.x << randomPosition.y << endl;
+			//testEnemy = new Pawn(this, mWorld, randomPosition);
+			//mEnemies.push_back(testEnemy);
+			randomPosition = GenRandomPosition(Vector2(300, -300));
+			trickEnemy = new TrickPawn(this, mWorld, randomPosition);
+			mEnemies.push_back(trickEnemy);
+			enemiesToSpawn--;
+			if (!test && currentLevel == 3) {
+				bossEnemy = new BossPawn(this, mWorld, Vector2(500, -500), mEnemies);
+				mEnemies.push_back(bossEnemy);
+				test = true;
 			}
 		}
 
@@ -463,7 +466,9 @@ namespace Nobody
 				[this](GameObject* enemy) { 
 					if (enemy->GetState() == GameObject::State::EDead) {
 						score++;  
-						mPlayer->SetExp(*mPlayer->GetExp() + 1);  
+						mPlayer->SetExp(*mPlayer->GetExp() + 1); 
+						enemiesDead++;
+						if(enemiesDead == currentLevel * 4 + 6 )needUpdate = true;
 						return true;  
 					}
 		return false;  
@@ -527,10 +532,10 @@ namespace Nobody
 		
 		// 将分数转换为字符串 // English: Convert the score to a string
 		std::string scoreText ="Score  " + std::to_string(score);
-
+		std::string levelText = "Current Wave  " + std::to_string(currentLevel);
 		// 使用 RenderText 函数在指定的位置显示分数 // English: Use the RenderText function to display the score at the specified position
 		RenderText(mRenderer, font, scoreText, scoreColor, scoreTextRect);
-
+		RenderText(mRenderer, font, levelText, scoreColor, levelTextRect);
 		for (GameObject* enemy : mEnemies)
 		{
 			if (enemy->GetState() == GameObject::State::EActive)

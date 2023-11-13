@@ -41,7 +41,7 @@ namespace Nobody
 		if (mExp >= neededExp) {
 			mLevel++;
 			mExp = mExp - neededExp;
-			neededExp = neededExp + 3;
+			neededExp = neededExp + 1;
 			GetGame()->mIsChoosingProps = true;
 		}
 	}

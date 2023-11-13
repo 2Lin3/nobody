@@ -77,8 +77,8 @@ namespace Nobody
 		void LimitUpBorder(GameObject* gameObject);
 		//!	player 噶了
 		void RenderDeathMessage();
-		bool			mIsChoosingProps = false;//!<		设置选择道具的显示标志
-		bool			mIsDrawingChoosingProps = false;//!< 设置选择道具的绘制标志
+		bool mIsChoosingProps = false;//!<		设置选择道具的显示标志
+		bool mIsDrawingChoosingProps = false;//!< 设置选择道具的绘制标志
 	private:
 		//!	处理事件
 		void	Event();
@@ -143,9 +143,14 @@ namespace Nobody
 		const int positionIterations = 2;
 
 		float mSpawnTimer;//计时器
+		int currentLevel = 0;//当前关卡
+		int enemiesToSpawn;    // 在当前关卡需要生成的敌人总数
+		int enemiesDead ;  // 当前关卡死亡的敌人数量
+		bool needUpdate = true;//是否需要更新
 
 		int score;  // 分数
 		SDL_Rect scoreTextRect = { 1000, 20, 100, 50 };
+		SDL_Rect levelTextRect = { 1000, 50, 200, 50 };
 		SDL_Color scoreColor = { 255, 255, 255 };
 
 		// 定义颜色
