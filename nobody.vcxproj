@@ -71,8 +71,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\nobody;C:\nobody\SDL2_ttf-2.20.2\include;C:\box2d-main\include;C:\nobody\SDL2-2.24.2\include;C:\nobody\SDL2_image-2.6.2\include;C:\nobody\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\nobody\SDL2_ttf-2.20.2\lib\x64;C:\nobody\SDL2-2.24.2\lib\x64;C:\nobody\SDL2_image-2.6.2\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>.\;.\SDL2_ttf-2.20.2\include;.\box2d-main\include;.\SDL2-2.24.2\include;.\SDL2_image-2.6.2\include;.\include;$(IncludePath)</IncludePath>
+    <LibraryPath>.\SDL2_ttf-2.20.2\lib\x64;.\SDL2-2.24.2\lib\x64;.\SDL2_image-2.6.2\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -111,7 +111,7 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <CompileAs>CompileAsCpp</CompileAs>
-      <AdditionalIncludeDirectories>C:\nobody\include;C:\nobody\box2d-main\include\box2d;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\include;.\box2d-main\include\box2d;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

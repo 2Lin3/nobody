@@ -419,7 +419,7 @@ namespace Nobody
 			trickEnemy = new TrickPawn(this, mWorld, randomPosition);
 			mEnemies.push_back(trickEnemy);
 			enemiesToSpawn--;
-			if (!test && currentLevel == 3) {
+			if (!test && currentLevel >= 3) {
 				bossEnemy = new BossPawn(this, mWorld, Vector2(500, -500), mEnemies);
 				mEnemies.push_back(bossEnemy);
 				test = true;

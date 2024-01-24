@@ -46,7 +46,7 @@ void AudioManager::CalculateStereoPan(float sourceX, float sourceY, float listen
     // 计算声源和听众之间的角度或者水平距离
     float angle = atan2(listenerY - sourceY, listenerX - sourceX);
     float distance = sqrt((listenerX - sourceX) * (listenerX - sourceX) + (listenerY - sourceY) * (listenerY - sourceY));
-    float volume = std::max(0.0f, 1.0f - distance / MAX_SOUND_DISTANCE); // 假设你有一个最大声音距离常数
+    float volume = std::max(0.0f, 1.0f - distance / MAX_SOUND_DISTANCE); // 最大声音距离常数
 
     left = static_cast<Uint8>(volume * (0.5f * (1.0f - cos(angle))));
     right = static_cast<Uint8>(volume * (0.5f * (1.0f + cos(angle))));
