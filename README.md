@@ -26,3 +26,4 @@ The game includes audio functionality, using SDL_mixer for playing music and sou
 
 ## Game States and Transitions
 It manages different game states, such as starting, pausing, and ending the game, including displaying messages and handling transitions between these states.
+Commit 1 line
