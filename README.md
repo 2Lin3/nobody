@@ -28,3 +28,4 @@ The game includes audio functionality, using SDL_mixer for playing music and sou
 It manages different game states, such as starting, pausing, and ending the game, including displaying messages and handling transitions between these states.
 Commit 1 line
 Commit 2 line
+Commit 3 line
